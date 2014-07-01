@@ -5,19 +5,36 @@ gulp-develop-server
 
 
 
-example with gulp-livereload
+examples
 -------
+
+*simple:*
+```javascript
+var gulp       = require( 'gulp' ),
+    server     = require( 'gulp-develop-server' );
+
+gulp.task( 'startServer', function() {
+    server.listen( { path: 'app.js' } );
+});
+
+gulp.task( 'default', [ 'startServer' ], function() {
+	 gulp.watch( [ 'app.js' ], server.changed );
+});
+```
+
+
+*with gulp-livereload:*  
 
 ```javascript
 var gulp       = require( 'gulp' ),
     server     = require( 'gulp-develop-server' ),
     livereload = require( 'gulp-livereload' );
 
-gulp.task( 'server', function() {
+gulp.task( 'startServer', function() {
     server.listen( { path: 'app.js' }, livereload.listen );
 });
 
-gulp.task( 'watch', [ 'server' ], function() {
+gulp.task( 'watch', [ 'startServer' ], function() {
     function restartServer() {
         server.changed( function( error ) {
             if( ! error ) livereload.changed();
@@ -28,5 +45,4 @@ gulp.task( 'watch', [ 'server' ], function() {
 });
 
 gulp.task( 'default', [ 'watch' ] );
-
 ```
