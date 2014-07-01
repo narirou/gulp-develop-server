@@ -1,0 +1,26 @@
+{
+  "name": "gulp-develop-server",
+  "version": "0.0.1",
+  "auther": "narirou <narirou.github@gmail.com>",
+  "description": "automatically restart node.js server for development",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/narirou/gulp-develop-server.git"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --timeout 3000 ./test/test.js"
+  },
+  "dependencies": {
+    "gulp-util": "*",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "express": "^4.4.5",
+    "should": "^4.0.4",
+    "sinon": "*"
+  },
+  "license": "MIT"
+}
