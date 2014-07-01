@@ -2,7 +2,7 @@
   "name": "gulp-develop-server",
   "version": "0.0.1",
   "auther": "narirou <narirou.github@gmail.com>",
-  "description": "automatically restart node.js server for development",
+  "description": "a gulp plugin: automatically restert the node server for development.",
   "engines": {
     "node": ">=0.10.0"
   },
