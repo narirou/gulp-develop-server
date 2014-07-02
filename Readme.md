@@ -4,15 +4,19 @@ gulp-develop-server
 > a gulp plugin: run your node.js server and automatically restart for development.
 
 [![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
+[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)]()
+[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)]()
 
 
-<!-- installation
+
+
+installation
 ------------
 
 ```bash
-npm install --save-dev gulp-develop-server
+npm install gulp-develop-server --save-dev
 ```
- -->
+
 
 
 
@@ -77,7 +81,6 @@ sending kill message to server process.
 
 
 
-
 examples
 --------
 
@@ -118,7 +121,6 @@ gulp.task( 'default', [ 'startServer' ], function() {
     gulp.watch( [ 'app.js', 'routes/**/*.js' ], restartServer );
 });
 ```
-
 
 
 ###with Stream:
