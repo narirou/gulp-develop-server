@@ -140,6 +140,10 @@ app.kill = function( signal, callback ) {
 		callback = signal;
 		signal = app.options.killSignal;
 	}
+	else {
+		signal = signal || app.options.killSignal;
+	}
+
 
 	// sending kill signall
 	if( app.child && app.child.connected ) {

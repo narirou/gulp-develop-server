@@ -18,7 +18,7 @@ npm install --save-dev gulp-develop-server
 
 api
 ---
-###server.listen( options [, callback] )
+###server.listen( options[, callback] )
 
 **options {Object}**  
 
@@ -54,9 +54,6 @@ api
     - this option is used when exec server.kill.
 
 **callback( error )**  
-
-- error
-    - type: {String} | {undefined}
 
 
 ###server.restart( [callback] )

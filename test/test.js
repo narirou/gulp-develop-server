@@ -91,7 +91,7 @@ describe( 'gulp-develop-server', function() {
 
 	it( 'should listen server with options.delay', function( done ) {
 		var opt = {
-			path: 'test/apps/app',
+			path: 'test/apps/app-no-message',
 			delay: 50
 		};
 		var now = Date.now();
@@ -165,7 +165,12 @@ describe( 'gulp-develop-server', function() {
 			path: 'test/apps/app'
 		};
 
-		app.listen( opt, function() {
+		app.listen( opt, function( error ) {
+
+			should.not.exist( error );
+			should( app.child.connected ).eql( true );
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+
 			app.kill( 'SIGTERM', function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
@@ -182,12 +187,14 @@ describe( 'gulp-develop-server', function() {
 			killSignal: 'SIGTERM'
 		};
 
-		app.listen( opt, function() {
+		app.listen( opt, function( error ) {
 
 			should( app.options.killSignal ).eql( opt.killSignal );
+			should.not.exist( error );
+			should( app.child.connected ).eql( true );
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 
 			app.kill( function( error ) {
-				if( error ) console.log( error );
 				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
