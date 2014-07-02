@@ -8,6 +8,7 @@ var should    = require( 'should' ),
 
 
 describe( 'gulp-develop-server', function() {
+
 	before( function() {
 		stubGutil = sinon.stub( gutil, 'log' );
 	});
@@ -156,6 +157,7 @@ describe( 'gulp-develop-server', function() {
 			app.kill( function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
+				should( gutil.log.args.length ).eql( 2 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
 			});
@@ -176,6 +178,7 @@ describe( 'gulp-develop-server', function() {
 			app.kill( 'SIGTERM', function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
+				should( gutil.log.args.length ).eql( 2 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
 			});
@@ -198,6 +201,7 @@ describe( 'gulp-develop-server', function() {
 			app.kill( function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
+				should( gutil.log.args.length ).eql( 2 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
 			});
