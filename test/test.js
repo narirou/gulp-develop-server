@@ -173,7 +173,7 @@ describe( 'gulp-develop-server', function() {
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 
-			app.kill( 'SIGINT', function( error ) {
+			app.kill( 'SIGTERM', function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
