@@ -146,7 +146,7 @@ app.kill = function( signal, callback ) {
 
 	// sending kill signall
 	if( app.child && app.child.connected ) {
-		app.child.on( 'exit', stopped( callback ) );
+		app.child.on( 'close', stopped( callback ) );
 
 		app.child.kill( signal );
 
