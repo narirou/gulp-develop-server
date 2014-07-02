@@ -144,7 +144,6 @@ app.kill = function( signal, callback ) {
 		signal = signal || app.options.killSignal;
 	}
 
-
 	// sending kill signall
 	if( app.child && app.child.connected ) {
 		app.child.on( 'exit', stopped( callback ) );
@@ -156,7 +155,7 @@ app.kill = function( signal, callback ) {
 
 	// server already stopped
 	if( typeof callback === 'function' ) {
-		process.nextTick( callback );
+		callback();
 	}
 
 	return app;
