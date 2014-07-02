@@ -14,8 +14,10 @@ describe( 'gulp-develop-server', function() {
 
 
 	afterEach( function( done ) {
-		stubGutil.reset();
-		app.reset( done );
+		app.reset( function() {
+			stubGutil.reset();
+			done();
+		});
 	});
 
 
@@ -109,6 +111,19 @@ describe( 'gulp-develop-server', function() {
 		should( function() {
 			app.listen( {} );
 		}).throw();
+	});
+
+
+	it( 'should throw error when server broken', function() {
+		var opt = {
+			path: 'test/apps/app-broken'
+		};
+
+		app.listen( opt, function( error ) {
+			should( error ).not.eql( undefined );
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server error/ );
+			done();
+		});
 	});
 
 
