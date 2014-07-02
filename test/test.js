@@ -27,7 +27,7 @@ describe( 'gulp-develop-server', function() {
 		};
 
 		app.listen( opt, function( error ) {
-			should( error ).eql( undefined );
+			should.not.exist( error );
 			should( app.child.connected ).eql( true );
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 			done();
@@ -41,7 +41,7 @@ describe( 'gulp-develop-server', function() {
 		};
 
 		app.listen( opt, function( error ) {
-			should( error ).eql( undefined );
+			should.not.exist( error );
 			should( app.child.connected ).eql( true );
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 			done();
@@ -55,7 +55,7 @@ describe( 'gulp-develop-server', function() {
 		};
 
 		app.listen( opt, function( error ) {
-			should( error ).eql( undefined );
+			should.not.exist( error );
 			should( app.child.connected ).eql( true );
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 			done();
@@ -120,7 +120,7 @@ describe( 'gulp-develop-server', function() {
 		};
 
 		app.listen( opt, function( error ) {
-			should( error ).not.eql( undefined );
+			should.exist( error );
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server error/ );
 			done();
 		});
@@ -134,7 +134,7 @@ describe( 'gulp-develop-server', function() {
 
 		app.listen( opt, function() {
 			app.restart( function( error ) {
-				should( error ).eql( undefined );
+				should.not.exist( error );
 				should( app.child.connected ).eql( true );
 				should( gutil.log.args.length ).eql( 4 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was restarted/ );
@@ -151,7 +151,7 @@ describe( 'gulp-develop-server', function() {
 
 		app.listen( opt, function() {
 			app.kill( function( error ) {
-				should( error ).eql( undefined );
+				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
@@ -167,7 +167,7 @@ describe( 'gulp-develop-server', function() {
 
 		app.listen( opt, function() {
 			app.kill( 'SIGINT', function( error ) {
-				should( error ).eql( undefined );
+				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
@@ -187,7 +187,7 @@ describe( 'gulp-develop-server', function() {
 			should( app.options.killSignal ).eql( opt.killSignal );
 
 			app.kill( function( error ) {
-				should( error ).eql( undefined );
+				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
 				done();
