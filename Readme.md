@@ -3,6 +3,8 @@ gulp-develop-server
 
 > a gulp plugin: run your node.js server and automatically restart for development.
 
+[![Build Status](https://secure.travis-ci.org/narirou/gulp-develop-server.png?branch=master)](https://travis-ci.org/narirou/gulp-develop-server)  
+
 
 <!-- installation
 ------------
@@ -57,6 +59,7 @@ api
     - type: {String} | {undefined}
 
 
+###server.restart( [callback] )
 ###server.changed( [callback] )
 
 **callback( error )**  
@@ -84,8 +87,8 @@ examples
 ###simple:
 
 ```javascript
-var gulp       = require( 'gulp' ),
-    server     = require( 'gulp-develop-server' );
+var gulp   = require( 'gulp' ),
+    server = require( 'gulp-develop-server' );
 
 gulp.task( 'startServer', function() {
     server.listen( { path: 'app.js' } );
@@ -134,7 +137,7 @@ gulp.task( 'startServer', function() {
 });
 
 gulp.task( 'restartServer', [ 'startServer' ], function() {
-    gulp.src( [ 'app.js' ], { read: false } )
+    gulp.src( [ './app.js' ], { read: false } )
         .pipe( changed( './' ) )
         .pipe( server() )
         .pipe( livereload() );
