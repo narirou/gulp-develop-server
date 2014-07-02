@@ -4,8 +4,6 @@ gulp-develop-server
 > a gulp plugin: run your node.js server and automatically restart for development.
 
 
-
-
 <!-- installation
 ------------
 
@@ -18,40 +16,72 @@ npm install --save-dev gulp-develop-server
 
 api
 ---
-####listen( options [, callback] )
-#####options {Object}
- * `path`
- * `env`
- * `nodeArgs`
- * `delay`
- * `successMessage`
- * `killSignal`
+###server.listen( options [, callback] )
 
-#####callback( error )
+**options {Object}**  
 
-************
+- `path`  
+    - type: {String}
+    - exapmle: `'./your_app.js'`
+    - Main application path. This option is required.
+
+- `env`  
+    - type: {Object}  
+    - default: `{ NODE_ENV: 'development' }`  
+    - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
+    - Server environment settings.  
+
+- `nodeArgs`  
+    - type: {Array}  
+    - example: `[ '--harmony', '--debug' ]`  
+    - a node process will be forked with this options.  
+
+- `delay`   
+    - type: {Numeric}  
+    - default: `600`  
+    - if not receive an error after `options.delay` seconds, regard the server listening success.
+
+- `successMessage`  
+    - type: {RegExp}
+    - default: `/^server listening$/`  
+    - if your application send a specific message by process.send, regard the server listening success.
+
+- `killSignal`  
+    - type: {String}
+    - default: `SIGTERM`
+    - this option is used when exec server.kill.
+
+**callback( error )**  
+
+- error
+    - type: {String} | {undefined}
 
 
-####changed( [callback] )
-callback( error )
+###server.changed( [callback] )
+
+**callback( error )**  
 
 
-************
+###server()
+
+Stream server restart function.  
+caution: If many files send to this stream, the server try to restart many times.  
 
 
-####kill( [signal, callback] )
- signal {String}
- callback( error )
- sending kill message to server process.
+###server.kill( [signal, callback] )
+
+sending kill message to server process.  
+**signal {String}**  
+**callback( error )**  
 
 
 
 
 
 examples
--------
+--------
 
-####simple:
+###simple:
 
 ```javascript
 var gulp       = require( 'gulp' ),
@@ -67,7 +97,7 @@ gulp.task( 'default', [ 'startServer' ], function() {
 ```
 
 
-####with gulp-livereload:
+###with gulp-livereload:
 
 ```javascript
 var gulp       = require( 'gulp' ),
@@ -79,7 +109,7 @@ gulp.task( 'startServer', function() {
 });
 
 // If server scripts change, restart the server and then livereload.
-gulp.task( 'watch', [ 'startServer' ], function() {
+gulp.task( 'default', [ 'startServer' ], function() {
     function restartServer() {
         server.changed( function( error ) {
             if( ! error ) livereload.changed();
@@ -87,13 +117,11 @@ gulp.task( 'watch', [ 'startServer' ], function() {
     }
     gulp.watch( [ 'app.js', 'routes/**/*.js' ], restartServer );
 });
-
-gulp.task( 'default', [ 'watch' ] );
 ```
 
 
 
-####with Stream:
+###with Stream:
 
 ```javascript
 var gulp       = require( 'gulp' ),
