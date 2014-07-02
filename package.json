@@ -2,7 +2,7 @@
   "name": "gulp-develop-server",
   "version": "0.0.1",
   "auther": "narirou <narirou.github@gmail.com>",
-  "description": "a gulp plugin: automatically restert the node server for development.",
+  "description": "a gulp plugin: run your node.js server and automatically restart for development.",
   "engines": {
     "node": ">=0.10.0"
   },
@@ -11,7 +11,7 @@
     "url": "https://github.com/narirou/gulp-develop-server.git"
   },
   "scripts": {
-    "test": "mocha --reporter spec --timeout 3000 ./test/test.js"
+    "test": "mocha --reporter spec --timeout 3000 ./test/test"
   },
   "dependencies": {
     "gulp-util": "*",
