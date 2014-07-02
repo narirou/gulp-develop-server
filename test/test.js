@@ -187,6 +187,7 @@ describe( 'gulp-develop-server', function() {
 			should( app.options.killSignal ).eql( opt.killSignal );
 
 			app.kill( function( error ) {
+				if( error ) console.log( error );
 				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
