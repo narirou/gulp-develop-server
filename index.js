@@ -57,7 +57,8 @@ app.defaultOptions = {
 	env: { NODE_ENV: 'development' },
 	nodeArgs: [],
 	delay: 600,
-	successMessage: /server listening/,
+	successMessage: /^server listening$/,
+	killSignal: 'SIGTERM'
 };
 
 
@@ -125,6 +126,8 @@ app.listen = function( options, callback ) {
 	// pipe child process's stdout / stderr
 	app.child.stdout.pipe( process.stdout );
 	app.child.stderr.pipe( process.stderr );
+
+	return app;
 };
 
 
@@ -133,32 +136,36 @@ app.kill = function( signal, callback ) {
 	// fallback arguments
 	if( typeof signal === 'function' ) {
 		callback = signal;
-		signal = 'SIGTERM';
+		signal = app.options.killSignal;
 	}
 
 	// sending kill signall
 	if( app.child && app.child.connected ) {
 		app.child.on( 'exit', stopped( callback ) );
 
-		return app.child.kill( signal );
+		app.child.kill( signal );
+
+		return app;
 	}
 
 	// server already stopped
 	if( typeof callback === 'function' ) {
 		process.nextTick( callback );
 	}
+
+	return app;
 };
 
 
 app.changed = app.restart = function( callback ) {
-	app.kill( function() {
+	return app.kill( function() {
 		app.listen( restarted( callback ) );
 	});
 };
 
 
 app.reset = function( callback ) {
-	app.kill( function() {
+	return app.kill( function() {
 		app.options = _.cloneDeep( app.defaultOptions );
 
 		if( callback ) callback();
