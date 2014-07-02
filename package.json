@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "auther": "narirou <narirou.github@gmail.com>",
   "description": "a gulp plugin: run your node.js server and automatically restart for development.",
+  "main": "index.js",
   "engines": {
     "node": ">=0.10.0"
   },
@@ -13,6 +14,12 @@
   "scripts": {
     "test": "mocha --reporter spec --timeout 3000 ./test/test"
   },
+  "keywords": [
+    "gulp",
+    "server",
+    "restart",
+    "express",
+  ],
   "dependencies": {
     "gulp-util": "*",
     "lodash": "^2.4.1"
