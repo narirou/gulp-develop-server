@@ -160,13 +160,13 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should kill server with signal: `SIGINT`', function( done ) {
+	it( 'should kill server with signal: `SIGTERM`', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
 
 		app.listen( opt, function() {
-			app.kill( 'SIGINT', function( error ) {
+			app.kill( 'SIGTERM', function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
@@ -176,10 +176,10 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should kill server with options.signal: `SIGINT`', function( done ) {
+	it( 'should kill server with options.signal: `SIGTERM`', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
-			killSignal: 'SIGINT'
+			killSignal: 'SIGTERM'
 		};
 
 		app.listen( opt, function() {

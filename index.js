@@ -16,8 +16,10 @@ function started( callback ) {
 
 function stopped( callback ) {
 	return function() {
-		gutil.log( 'development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
-		app.child = null;
+		if( app.child ) {
+			gutil.log( 'development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+			app.child = null;
+		}
 		if( callback ) callback();
 	};
 }
