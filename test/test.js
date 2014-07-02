@@ -114,7 +114,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw error when server broken', function() {
+	it( 'should throw error when server broken', function( done ) {
 		var opt = {
 			path: 'test/apps/app-broken'
 		};
