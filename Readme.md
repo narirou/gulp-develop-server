@@ -45,17 +45,18 @@ api
 - `delay`   
     - type: {Numeric}  
     - default: `600`  
-    - if not receive an error after `options.delay` seconds, regard the server listening success.
+    - If not receive an error after `options.delay` seconds, regard the server listening success.
+    - This option needs to adjust according to your application's initialize time.
 
 - `successMessage`  
     - type: {RegExp}
     - default: `/^server listening$/`  
-    - if your application send a specific message by process.send, regard the server listening success.
+    - If your application send a specific message by process.send, regard the server listening success.
 
 - `killSignal`  
     - type: {String}
     - default: `SIGTERM`
-    - this option is used when exec server.kill.
+    - This option is used when exec server.kill.
 
 **callback( error )**  
 
