@@ -9,7 +9,6 @@ gulp-develop-server
 
 
 
-
 installation
 ------------
 
@@ -17,6 +16,24 @@ installation
 npm install gulp-develop-server --save-dev
 ```
 
+
+
+example
+-------
+```javascript
+var gulp   = require( 'gulp' ),
+    server = require( 'gulp-develop-server' );
+
+// run server
+gulp.task( 'startServer', function() {
+    server.listen( { path: 'app.js' } );
+});
+
+// restart server if app.js changed
+gulp.task( 'default', [ 'startServer' ], function() {
+     gulp.watch( [ 'app.js' ], server.restart );
+});
+```
 
 
 
@@ -82,24 +99,8 @@ sending kill message to server process.
 
 
 
-examples
---------
-
-###simple:
-
-```javascript
-var gulp   = require( 'gulp' ),
-    server = require( 'gulp-develop-server' );
-
-gulp.task( 'startServer', function() {
-    server.listen( { path: 'app.js' } );
-});
-
-gulp.task( 'default', [ 'startServer' ], function() {
-     gulp.watch( [ 'app.js' ], server.changed );
-});
-```
-
+more examples
+-------------
 
 ###with gulp-livereload:
 
