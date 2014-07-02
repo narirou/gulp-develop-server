@@ -3,7 +3,7 @@ gulp-develop-server
 
 > a gulp plugin: run your node.js server and automatically restart for development.
 
-[![Build Status](https://secure.travis-ci.org/narirou/gulp-develop-server.png?branch=master)](https://travis-ci.org/narirou/gulp-develop-server)  
+[![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
 
 
 <!-- installation
