@@ -4,8 +4,8 @@ gulp-develop-server
 > a gulp plugin: run your node.js server and automatically restart for development.
 
 [![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
-[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)]()
-[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)]()
+[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)](https://www.npmjs.org/package/gulp-develop-server)
+[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 
 
