@@ -10,7 +10,7 @@ function started( callback ) {
 	return function() {
 		gutil.log( 'development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
 		if( typeof callback === 'function' ) {
-			callback( null );
+			callback();
 		}
 	};
 }
@@ -23,7 +23,7 @@ function stopped( callback ) {
 			app.child = null;
 		}
 		if( typeof callback === 'function' ) {
-			callback( null );
+			callback();
 		}
 	};
 }
@@ -176,7 +176,7 @@ app.reset = function( callback ) {
 		app.options = _.cloneDeep( app.defaultOptions );
 
 		if( typeof callback === 'function' ) {
-			callback( null );
+			callback();
 		}
 	})
 }
