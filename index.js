@@ -8,7 +8,9 @@ var _         = require( 'lodash' ),
 
 function started( callback ) {
 	return function() {
-		gutil.log( 'development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		if( app.child ) {
+			gutil.log( 'development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		}
 		if( typeof callback === 'function' ) {
 			callback();
 		}
@@ -106,7 +108,10 @@ app.listen = function( options, callback ) {
 	// run callback
 	//     if not receive an error after `options.delay` seconds,
 	//     regard the server listening success.
-	var timer = setTimeout( started( callback ), app.options.delay );
+	var timer;
+	if( typeof callback === 'function' ) {
+		timer = setTimeout( started( callback ), app.options.delay );
+	}
 
 	app.child.on( 'message', function( message ) {
 		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
@@ -116,14 +121,10 @@ app.listen = function( options, callback ) {
 	});
 
 	app.child.stderr.on( 'data', function( error ) {
-		if( timer ) {
+		if( timer && error ) {
 			clearTimeout( timer );
-
 			gutil.log( gutil.colors.red( 'development server error:' ) );
-
-			if( typeof callback === 'function' ) {
-				callback( '' + error );
-			}
+			callback( '' + error );
 		}
 	});
 
