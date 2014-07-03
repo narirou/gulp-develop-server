@@ -1,15 +1,15 @@
 gulp-develop-server
 ====================
 
-> a gulp plugin: run your node.js server and automatically restart for development.
+> run your node.js server and automatically restart.
 
 [![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
 [![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)](https://www.npmjs.org/package/gulp-develop-server)
 [![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 
-gulp-develop-server is a development assistant for node.js server
-that runs the process and automatically restarts it when a file is modified with gulp.  
+gulp-develop-server is a development assistant for node.js server that runs
+the process and automatically restarts it when a file is modified with gulp. 
 
 
 installation
