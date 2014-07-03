@@ -8,6 +8,9 @@ gulp-develop-server
 [![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 
+gulp-develop-server is a development assistant for node.js server
+that runs the process and automatically restarts it when a file is modified with gulp.  
+
 
 installation
 ------------
