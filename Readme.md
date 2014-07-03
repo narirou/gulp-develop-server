@@ -57,7 +57,7 @@ api
     - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
     - Server environment settings.  
 
-- `nodeArgs`  
+- `execArgv`  
     - type: {Array}  
     - example: `[ '--harmony' ]`  
     - run node process with this options.  

@@ -64,14 +64,14 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should listen server with options.nodeArgs', function( done ) {
+	it( 'should listen server with options.execArgv', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
-			nodeArgs: [ '--harmony' ]
+			execArgv: [ '--harmony' ]
 		};
 
 		app.listen( opt, function( error ) {
-			should( app.options.nodeArgs ).eql( opt.nodeArgs );
+			should( app.options.execArgv ).eql( opt.execArgv );
 			done();
 		});
 	});

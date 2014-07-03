@@ -63,7 +63,7 @@ app.child = null;
 app.defaultOptions = {
 	path: '',
 	env: { NODE_ENV: 'development' },
-	nodeArgs: [],
+	execArgv: [],
 	delay: 600,
 	successMessage: /^server listening$/,
 	killSignal: 'SIGTERM'
@@ -91,18 +91,12 @@ app.listen = function( options, callback ) {
 	}
 
 
-	// add Node's arguments
-	var args = app.options.nodeArgs;
-
-	if( args instanceof Array && args.length ) {
-		args.forEach( function( arg ){
-			process.execArgv.push( arg );
-		});
-	}
-
-
 	// run server process
-	app.child = fork( app.options.path, { silent: true, env: app.options.env } );
+	app.child = fork( app.options.path, {
+		silent:   true,
+		env:      app.options.env,
+		execArgv: app.options.execArgv
+	});
 
 
 	// run callback
@@ -123,10 +117,10 @@ app.listen = function( options, callback ) {
 	app.child.stderr.on( 'data', function( error ) {
 		if( error ) {
 			gutil.log( gutil.colors.red( 'development server error:' ) );
-		}
-		if( timer ) {
-			clearTimeout( timer );
-			callback( '' + error );
+			if( timer ) {
+				clearTimeout( timer );
+				callback( '' + error );
+			}
 		}
 	});
 
