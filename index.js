@@ -121,9 +121,11 @@ app.listen = function( options, callback ) {
 	});
 
 	app.child.stderr.on( 'data', function( error ) {
-		if( timer && error ) {
-			clearTimeout( timer );
+		if( error ) {
 			gutil.log( gutil.colors.red( 'development server error:' ) );
+		}
+		if( timer ) {
+			clearTimeout( timer );
 			callback( '' + error );
 		}
 	});
