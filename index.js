@@ -121,9 +121,8 @@ app.listen = function( options, callback ) {
 
 			gutil.log( gutil.colors.red( 'development server error:' ) );
 
-			if( callback ) {
-				var errorMessage = '' + error || null;
-				callback( errorMessage );
+			if( typeof callback === 'function' ) {
+				callback( '' + error );
 			}
 		}
 	});
