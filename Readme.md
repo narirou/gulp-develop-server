@@ -21,8 +21,8 @@ npm install gulp-develop-server --save-dev
 
 
 
-example
--------
+usage
+-----
 ```javascript
 var gulp   = require( 'gulp' ),
     server = require( 'gulp-develop-server' );
@@ -59,8 +59,8 @@ api
 
 - `nodeArgs`  
     - type: {Array}  
-    - example: `[ '--harmony', '--debug' ]`  
-    - a node process will be forked with this options.  
+    - example: `[ '--harmony' ]`  
+    - run node process with this options.  
 
 - `delay`   
     - type: {Numeric}  
@@ -76,7 +76,6 @@ api
 - `killSignal`  
     - type: {String}
     - default: `SIGTERM`
-    - This option is used when exec server.kill.
 
 **callback( error )**  
 
@@ -105,7 +104,7 @@ sending kill message to server process.
 more examples
 -------------
 
-###with gulp-livereload:
+####with gulp-livereload:
 
 ```javascript
 var gulp       = require( 'gulp' ),
@@ -128,7 +127,7 @@ gulp.task( 'default', [ 'startServer' ], function() {
 ```
 
 
-###with Stream:
+####with Stream:
 
 ```javascript
 var gulp       = require( 'gulp' ),
