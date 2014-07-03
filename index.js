@@ -107,20 +107,18 @@ app.listen = function( options, callback ) {
 		timer = setTimeout( started( callback ), app.options.delay );
 	}
 
-	app.child.on( 'message', function( message ) {
+	app.child.once( 'message', function( message ) {
 		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
 			clearTimeout( timer );
 			started( callback )();
 		}
 	});
 
-	app.child.stderr.on( 'data', function( error ) {
-		if( error ) {
+	app.child.stderr.once( 'data', function( error ) {
+		if( error && timer ) {
 			gutil.log( gutil.colors.red( 'development server error:' ) );
-			if( timer ) {
-				clearTimeout( timer );
-				callback( '' + error );
-			}
+			clearTimeout( timer );
+			callback( '' + error );
 		}
 	});
 
@@ -146,7 +144,7 @@ app.kill = function( signal, callback ) {
 
 	// sending kill signall
 	if( app.child && app.child.connected ) {
-		app.child.on( 'close', stopped( callback ) );
+		app.child.once( 'close', stopped( callback ) );
 
 		app.child.kill( signal );
 
