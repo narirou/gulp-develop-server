@@ -1,7 +1,7 @@
 gulp-develop-server
 ====================
 
-> run your node.js server and automatically restart.
+> run your node.js server and automatically restart with gulp.
 
 [![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
 [![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)](https://www.npmjs.org/package/gulp-develop-server)
@@ -9,7 +9,7 @@ gulp-develop-server
 
 
 gulp-develop-server is a development assistant for node.js server that runs
-the process and automatically restarts it when a file is modified with gulp. 
+the process and automatically restarts it when a file is modified. 
 
 
 installation
