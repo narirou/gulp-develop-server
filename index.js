@@ -116,13 +116,15 @@ app.listen = function( options, callback ) {
 	});
 
 	app.child.stderr.on( 'data', function( error ) {
-		gutil.log( gutil.colors.red( 'development server error:' ) );
+		if( timer ) {
+			clearTimeout( timer );
 
-		if( timer ) clearTimeout( timer );
+			gutil.log( gutil.colors.red( 'development server error:' ) );
 
-		if( callback ) {
-			var errorMessage = '' + error || null;
-			callback( errorMessage );
+			if( callback ) {
+				var errorMessage = '' + error || null;
+				callback( errorMessage );
+			}
 		}
 	});
 

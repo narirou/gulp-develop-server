@@ -132,7 +132,11 @@ describe( 'gulp-develop-server', function() {
 			path: 'test/apps/app'
 		};
 
-		app.listen( opt, function() {
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+
 			app.restart( function( error ) {
 				should.not.exist( error );
 				should( app.child.connected ).be.true;
