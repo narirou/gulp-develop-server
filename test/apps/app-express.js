@@ -4,9 +4,9 @@ var express = require( 'express' );
 
 var app = express();
 
-app.get( '/', function(req, res){
+app.get( '/', function( req, res ){
 	res.status( 200 );
-	res.send( 'Hello World' );
+	res.send( 'Hello World\n' );
 });
 
 app.listen( 1337, function() {

@@ -174,8 +174,8 @@ app.reset = function( callback ) {
 		if( typeof callback === 'function' ) {
 			callback();
 		}
-	})
-}
+	});
+};
 
 
 module.exports = app;

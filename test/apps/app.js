@@ -9,8 +9,6 @@ var server = http.createServer( function( req, res ) {
 	res.end( 'Hello World\n' );
 });
 
-server.on( 'listening', function() {
+server.listen( port, function() {
 	process.send( 'server listening' );
 });
-
-server.listen( port );

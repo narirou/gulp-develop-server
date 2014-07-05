@@ -1,28 +1,32 @@
 'use strict';
 
-var should    = require( 'should' ),
-	sinon     = require( 'sinon' ),
-	gutil     = require( 'gulp-util' ),
-	app       = require( '../' ),
-	stubGutil = null;
+var http    = require( 'http' ),
+	should  = require( 'should' ),
+	sinon   = require( 'sinon' ),
+	gutil   = require( 'gulp-util' ),
+	request = require( 'supertest' ),
+	app     = require( '../' );
+
+var url  = 'http://localhost:1337',
+	stub = null;
 
 
 describe( 'gulp-develop-server', function() {
 
 	before( function() {
-		stubGutil = sinon.stub( gutil, 'log' );
+		stub = sinon.stub( gutil, 'log' );
 	});
 
 
 	afterEach( function( done ) {
 		app.reset( function() {
-			stubGutil.reset();
+			stub.reset();
 			done();
 		});
 	});
 
 
-	it( 'should listen server', function( done ) {
+	it( 'should listen the server', function( done ) {
 		var opt = {
 			path: 'test/apps/app-no-message'
 		};
@@ -31,12 +35,12 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			done();
+			request( url ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
 
-	it( 'should listen server by checking process.message', function( done ) {
+	it( 'should listen the server by checking message', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
@@ -45,12 +49,12 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			done();
+			request( url ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
 
-	it( 'should listen express-server', function( done ) {
+	it( 'should listen the express server', function( done ) {
 		var opt = {
 			path: 'test/apps/app-express'
 		};
@@ -59,12 +63,12 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			done();
+			request( url ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
 
-	it( 'should listen server with options.execArgv', function( done ) {
+	it( 'should set options.execArgv', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			execArgv: [ '--harmony' ]
@@ -77,7 +81,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should listen server with options.env', function( done ) {
+	it( 'should set options.env', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			env: { NODE_ENV: 'production', PORT: 1338 }
@@ -90,7 +94,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should listen server with options.delay', function( done ) {
+	it( 'should listen the server with options.delay', function( done ) {
 		var opt = {
 			path: 'test/apps/app-no-message',
 			delay: 50
@@ -114,7 +118,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw error when server broken', function( done ) {
+	it( 'should throw error if the server is broken', function( done ) {
 		var opt = {
 			path: 'test/apps/app-broken'
 		};
@@ -127,22 +131,25 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should resetart server', function( done ) {
+	it( 'should resetart the server', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
+		var pid;
 
 		app.listen( opt, function( error ) {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+			pid = app.child.pid;
 
 			app.restart( function( error ) {
 				should.not.exist( error );
 				should( app.child.connected ).be.true;
 				should( gutil.log.args.length ).eql( 4 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was restarted/ );
-				done();
+				should( app.child.pid ).not.eql( pid );
+				request( url ).get( '/' ).expect( 200 ).end( done );
 			});
 		});
 	});
