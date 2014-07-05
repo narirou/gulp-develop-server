@@ -1,6 +1,6 @@
 {
   "name": "gulp-develop-server",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "auther": "narirou <narirou.github@gmail.com>",
   "description": "run your node.js server and automatically restart with gulp for development.",
   "main": "index.js",
