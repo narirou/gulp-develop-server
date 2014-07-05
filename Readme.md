@@ -103,7 +103,7 @@ sending kill message to server process.
 more examples
 -------------
 
-####with gulp-livereload:
+####with [gulp-livereload](https://github.com/vohof/gulp-livereload):
 
 ```javascript
 var gulp       = require( 'gulp' ),
