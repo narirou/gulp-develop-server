@@ -161,6 +161,11 @@ app.kill = function( signal, callback ) {
 
 
 app.changed = app.restart = function( callback ) {
+
+	if( ! app.child && ! app.child.connected ) {
+		throw new gutil.PluginError( 'gulp-develop-server', 'development server was not started.' );
+	}
+
 	return app.kill( function() {
 		app.listen( restarted( callback ) );
 	});

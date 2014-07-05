@@ -118,7 +118,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw error if the server is broken', function( done ) {
+	it( 'should throw an error if the server is broken', function( done ) {
 		var opt = {
 			path: 'test/apps/app-broken'
 		};
@@ -152,6 +152,14 @@ describe( 'gulp-develop-server', function() {
 				request( url ).get( '/' ).expect( 200 ).end( done );
 			});
 		});
+	});
+
+
+	it( 'should throw an error if call server.restart before server.listen', function() {
+
+		should( function() {
+			app.restart();
+		}).throw();
 	});
 
 
