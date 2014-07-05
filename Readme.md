@@ -28,12 +28,12 @@ var gulp   = require( 'gulp' ),
     server = require( 'gulp-develop-server' );
 
 // run server
-gulp.task( 'startServer', function() {
+gulp.task( 'server:start', function() {
     server.listen( { path: 'app.js' } );
 });
 
 // restart server if app.js changed
-gulp.task( 'default', [ 'startServer' ], function() {
+gulp.task( 'server:restart', [ 'server:start' ], function() {
      gulp.watch( [ 'app.js' ], server.restart );
 });
 ```
@@ -80,8 +80,7 @@ api
 **callback( error )**  
 
 
-###server.restart( [callback] )
-###server.changed( [callback] )
+###server.restart( [callback] ) / server.changed( [callback] )
 
 **callback( error )**  
 
@@ -111,18 +110,18 @@ var gulp       = require( 'gulp' ),
     server     = require( 'gulp-develop-server' ),
     livereload = require( 'gulp-livereload' );
 
-gulp.task( 'startServer', function() {
+gulp.task( 'server:start', function() {
     server.listen( { path: 'app.js' }, livereload.listen );
 });
 
 // If server scripts change, restart the server and then livereload.
-gulp.task( 'default', [ 'startServer' ], function() {
-    function restartServer() {
+gulp.task( 'server:restart', [ 'server:start' ], function() {
+    function restart() {
         server.changed( function( error ) {
             if( ! error ) livereload.changed();
         });
     }
-    gulp.watch( [ 'app.js', 'routes/**/*.js' ], restartServer );
+    gulp.watch( [ 'app.js', 'routes/**/*.js' ], restart );
 });
 ```
 
@@ -135,11 +134,11 @@ var gulp       = require( 'gulp' ),
     server     = require( 'gulp-develop-server' ),
     livereload = require( 'gulp-livereload' );
 
-gulp.task( 'startServer', function() {
+gulp.task( 'server:start', function() {
     server.listen( { path: 'app.js' }, livereload.listen );
 });
 
-gulp.task( 'restartServer', [ 'startServer' ], function() {
+gulp.task( 'server:restart', [ 'server:start' ], function() {
     gulp.src( [ './app.js' ], { read: false } )
         .pipe( changed( './' ) )
         .pipe( server() )
