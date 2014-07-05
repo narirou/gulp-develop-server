@@ -162,23 +162,36 @@ app.kill = function( signal, callback ) {
 
 app.changed = app.restart = function( callback ) {
 
-	if( ! app.child && ! app.child.connected ) {
-		throw new gutil.PluginError( 'gulp-develop-server', 'development server was not started.' );
+	if( app.child && app.child.connected ) {
+		return app.kill( function() {
+			app.listen( restarted( callback ) );
+		});
 	}
 
-	return app.kill( function() {
-		app.listen( restarted( callback ) );
-	});
+	// server was not started, but try to start using options.path
+	else if( app.options.path ) {
+		return app.listen( restarted( callback ) );
+	}
+
+	// server was not started
+	throw new gutil.PluginError( 'gulp-develop-server', 'development server was not started.' );
 };
 
 
-app.reset = function( callback ) {
-	return app.kill( function() {
-		app.options = _.cloneDeep( app.defaultOptions );
+app.reset = function( signal, callback ) {
 
-		if( typeof callback === 'function' ) {
-			callback();
-		}
+	// fallback arguments
+	if( typeof signal === 'function' ) {
+		callback = signal;
+		signal = app.options.killSignal;
+	}
+	else {
+		signal = signal || app.options.killSignal;
+	}
+
+	return app.kill( signal, function() {
+		app.options = _.cloneDeep( app.defaultOptions );
+		stopped( callback )();
 	});
 };
 
