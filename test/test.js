@@ -1,7 +1,6 @@
 'use strict';
 
-var http    = require( 'http' ),
-	should  = require( 'should' ),
+var should  = require( 'should' ),
 	sinon   = require( 'sinon' ),
 	gutil   = require( 'gulp-util' ),
 	request = require( 'supertest' ),
@@ -68,7 +67,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should set options.execArgv', function( done ) {
+	it( 'should set `options.execArgv`', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			execArgv: [ '--harmony' ]
@@ -81,7 +80,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should set options.env', function( done ) {
+	it( 'should set `options.env`', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			env: { NODE_ENV: 'production', PORT: 1338 }
@@ -94,7 +93,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should listen the server with options.delay', function( done ) {
+	it( 'should listen the server with `options.delay`', function( done ) {
 		var opt = {
 			path: 'test/apps/app-no-message',
 			delay: 50
@@ -135,13 +134,12 @@ describe( 'gulp-develop-server', function() {
 		var opt = {
 			path: 'test/apps/app'
 		};
-		var pid;
 
 		app.listen( opt, function( error ) {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			pid = app.child.pid;
+			var pid = app.child.pid;
 
 			app.restart( function( error ) {
 				should.not.exist( error );
@@ -155,7 +153,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw an error if call server.restart before server.listen', function() {
+	it( 'should throw an error if call `server.restart` before `server.listen`', function() {
 
 		should( function() {
 			app.restart();
@@ -163,7 +161,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should kill server', function( done ) {
+	it( 'should kill the server', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
@@ -184,7 +182,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should kill server with signal: `SIGTERM`', function( done ) {
+	it( 'should kill the server by signal: `SIGTERM`', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
@@ -205,7 +203,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should kill server with options.signal: `SIGTERM`', function( done ) {
+	it( 'should kill the server by options.signal: `SIGTERM`', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			killSignal: 'SIGTERM'
@@ -219,6 +217,30 @@ describe( 'gulp-develop-server', function() {
 
 			app.kill( function( error ) {
 				should.not.exist( error );
+				should( app.child ).eql( null );
+				should( gutil.log.args.length ).eql( 2 );
+				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
+				done();
+			});
+		});
+	});
+
+
+	it( 'should reset the server', function( done ) {
+		var opt = {
+			path: 'test/apps/app',
+			testKey: true
+		};
+
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.options.testKey ).be.true;
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+
+			app.reset( function( error ) {
+				should.not.exist( error );
+				should( app.options ).not.have.key( 'testKey' );
 				should( app.child ).eql( null );
 				should( gutil.log.args.length ).eql( 2 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );

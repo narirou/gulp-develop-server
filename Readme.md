@@ -23,6 +23,7 @@ npm install gulp-develop-server --save-dev
 
 usage
 -----
+
 ```javascript
 var gulp   = require( 'gulp' ),
     server = require( 'gulp-develop-server' );
@@ -42,6 +43,7 @@ gulp.task( 'server:restart', [ 'server:start' ], function() {
 
 api
 ---
+
 ###server.listen( options[, callback] )
 
 **options {Object}**  
@@ -71,7 +73,7 @@ api
 - `successMessage`  
     - type: {RegExp}
     - default: `/^server listening$/`  
-    - If your application send a specific message by process.send, regard the server listening success.
+    - If your application send a specific message by `process.send` method, regard the server listening success.
 
 - `killSignal`  
     - type: {String}
@@ -93,10 +95,16 @@ caution: If many files send to this stream, the server try to restart many times
 
 ###server.kill( [signal, callback] )
 
-sending kill message to server process.  
+sending kill signal to the server process.  
 **signal {String}**  
 **callback( error )**  
 
+
+###server.reset( [signal, callback] )
+
+sending kill signal to the server process and reset the options to default.   
+**signal {String}**  
+**callback( error )**  
 
 
 
