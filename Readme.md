@@ -89,20 +89,20 @@ api
 
 ###server()
 
-Stream server restart function.  
+Create a `Transform` stream and restart the server.  
 caution: If many files send to this stream, the server try to restart many times.  
 
 
 ###server.kill( [signal, callback] )
 
-sending kill signal to the server process.  
+Send kill signal to the server process.  
 **signal {String}**  
 **callback( error )**  
 
 
 ###server.reset( [signal, callback] )
 
-sending kill signal to the server process and reset the options to default.   
+Send kill signal to the server process and reset the options to default.   
 **signal {String}**  
 **callback( error )**  
 

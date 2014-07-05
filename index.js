@@ -80,6 +80,11 @@ app.listen = function( options, callback ) {
 		throw new gutil.PluginError( 'gulp-develop-server', 'application `path` required.' );
 	}
 
+	// server already started
+	if( app.child && app.child.connected ) {
+		return gutil.log( 'development server already started.')
+	}
+
 	// fallback arguments
 	if( typeof options === 'function' ) {
 		callback = options;
@@ -168,13 +173,13 @@ app.changed = app.restart = function( callback ) {
 		});
 	}
 
-	// server was not started, but try to start using options.path
+	// server not started, but try to start using options.path
 	else if( app.options.path ) {
 		return app.listen( restarted( callback ) );
 	}
 
-	// server was not started
-	throw new gutil.PluginError( 'gulp-develop-server', 'development server was not started.' );
+	// server not started
+	throw new gutil.PluginError( 'gulp-develop-server', 'development server not started.' );
 };
 
 
