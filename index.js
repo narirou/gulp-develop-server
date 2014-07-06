@@ -47,8 +47,12 @@ function app() {
 	var stream = new Transform({ objectMode: true });
 
 	stream._transform = function( file, encoding, callback ) {
-		this.push( file );
-		app.changed( callback );
+		console.log( file );
+
+		app.changed( function() {
+			stream.push( file );
+			callback();
+		});
 	};
 
 	stream.changed = app.changed;
@@ -112,20 +116,23 @@ app.listen = function( options, callback ) {
 		timer = setTimeout( started( callback ), app.options.delay );
 	}
 
-	app.child.once( 'message', function( message ) {
-		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
-			clearTimeout( timer );
-			started( callback )();
-		}
-	});
-
-	app.child.stderr.once( 'data', function( error ) {
+	var errorHandler = function( error ) {
 		if( error && timer ) {
 			gutil.log( gutil.colors.red( 'development server error:' ) );
 			clearTimeout( timer );
 			callback( '' + error );
 		}
+	};
+
+	app.child.once( 'message', function( message ) {
+		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
+			clearTimeout( timer );
+			app.child.stderr.removeListener( 'data', errorHandler );
+			started( callback )();
+		}
 	});
+
+	app.child.stderr.once( 'data', errorHandler );
 
 
 	// pipe child process's stdout / stderr
