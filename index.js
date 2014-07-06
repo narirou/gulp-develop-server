@@ -1,9 +1,10 @@
 'use strict';
 
-var _         = require( 'lodash' ),
-	gutil     = require( 'gulp-util' ),
-	Transform = require( 'stream' ).Transform,
-	fork      = require( 'child_process' ).fork;
+var _          = require( 'lodash' ),
+	gutil      = require( 'gulp-util' ),
+	Transform  = require( 'stream' ).Transform,
+	fork       = require( 'child_process' ).fork,
+	pluginName = 'gulp-develop-server';
 
 
 function started( callback ) {
@@ -44,15 +45,25 @@ function restarted( callback ) {
 
 
 function app() {
-	var stream = new Transform({ objectMode: true });
+	var stream = new Transform( { objectMode: true } ),
+		isRestarted = false;
 
 	stream._transform = function( file, encoding, callback ) {
-		console.log( file );
-
-		app.changed( function() {
-			stream.push( file );
+		if( ! isRestarted ) {
+			isRestarted = true;
+			app.changed( function() {
+				stream.push( file );
+				callback();
+			});
+		}
+		else {
+			this.push( file );
 			callback();
-		});
+		}
+	};
+
+	stream.end = function( file ) {
+		isRestarted = false;
 	};
 
 	stream.changed = app.changed;
@@ -81,7 +92,7 @@ app.listen = function( options, callback ) {
 
 	// throw error when options is not set
 	if( ! app.options.path && typeof options.path !== 'string' ) {
-		throw new gutil.PluginError( 'gulp-develop-server', 'application `path` required.' );
+		throw new gutil.PluginError( pluginName, 'application `path` required.' );
 	}
 
 	// server already started
@@ -112,7 +123,7 @@ app.listen = function( options, callback ) {
 	//     if not receive an error after `options.delay` seconds,
 	//     regard the server listening success.
 	var timer;
-	if( typeof callback === 'function' ) {
+	if( typeof callback === 'function' && app.options.delay > 0 ) {
 		timer = setTimeout( started( callback ), app.options.delay );
 	}
 
@@ -183,7 +194,7 @@ app.changed = app.restart = function( callback ) {
 	}
 
 	// server not started
-	throw new gutil.PluginError( 'gulp-develop-server', 'development server not started.' );
+	throw new gutil.PluginError( pluginName, 'development server not started.' );
 };
 
 

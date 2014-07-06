@@ -51,24 +51,25 @@ api
 - `path`  
     - type: {String}
     - exapmle: `'./your_app.js'`
-    - Main application path. This option is required.
+    - Application path. This option is required.
 
 - `env`  
     - type: {Object}  
     - default: `{ NODE_ENV: 'development' }`  
     - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
-    - Server environment settings.  
+    - Environment settings of your server.  
 
 - `execArgv`  
     - type: {Array}  
     - example: `[ '--harmony' ]`  
-    - run node process with this options.  
+    - Run node process with this options.  
 
 - `delay`   
     - type: {Numeric}  
     - default: `600`  
-    - If not receive an error after `options.delay` seconds, regard the server listening success.
+    - If not receive an error from the server after `options.delay` seconds, regard the server listening success.
     - This option needs to adjust according to your application's initialize time.
+    - If this option set `0`, it will only check `successMessage`.  
 
 - `successMessage`  
     - type: {RegExp}
@@ -89,8 +90,8 @@ api
 
 ###server()
 
-Create a `Transform` stream and restart the server.  
-caution: If many files send to this stream, the server try to restart many times.  
+Create a `Transform` stream.
+Restart the server at once if get files.
 
 
 ###server.kill( [signal, callback] )
@@ -112,6 +113,7 @@ more examples
 -------------
 
 ####with [gulp-livereload](https://github.com/vohof/gulp-livereload):
+(recommend)
 
 ```javascript
 var gulp       = require( 'gulp' ),
@@ -143,20 +145,18 @@ var gulp       = require( 'gulp' ),
 
 // run server
 gulp.task( 'server:start', function() {
-    server.listen( { path: 'app.js' } );
+    server.listen( { path: 'app.js', execArgv: [ '--harmony' ] } );
 });
 
-// restart server if app.js changed
+// restart server and then livereload
 fulp.task( 'sever:restart', function() {
     gulp.src( 'app.js' )
         .pipe( server() )
         .pipe( livereload() ); 
 });
 
-gulp.task( 'watch', function() {
-     gulp.watch( [ 'app.js', 'routes/*.js' ], [ 'server:restart' ] );
+// watching server scripts 
+gulp.task( 'watch', [ 'server:start' ], function() {
+     gulp.watch( [ 'app.js', 'routes/**/*.js' ], [ 'server:restart' ] );
 });
-
-// run task
-gulp.task( 'default', [ 'server:start', 'watch' ] );
 ```
