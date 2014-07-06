@@ -86,7 +86,7 @@ app.listen = function( options, callback ) {
 
 	// server already started
 	if( app.child && app.child.connected ) {
-		return gutil.log( 'development server already started.')
+		return gutil.log( 'development server already started.' );
 	}
 
 	// fallback arguments
@@ -116,23 +116,20 @@ app.listen = function( options, callback ) {
 		timer = setTimeout( started( callback ), app.options.delay );
 	}
 
-	var errorHandler = function( error ) {
+	app.child.once( 'message', function( message ) {
+		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
+			clearTimeout( timer );
+			started( callback )();
+		}
+	});
+
+	app.child.stderr.once( 'data', function( error ) {
 		if( error && timer ) {
 			gutil.log( gutil.colors.red( 'development server error:' ) );
 			clearTimeout( timer );
 			callback( '' + error );
 		}
-	};
-
-	app.child.once( 'message', function( message ) {
-		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
-			clearTimeout( timer );
-			app.child.stderr.removeListener( 'data', errorHandler );
-			started( callback )();
-		}
 	});
-
-	app.child.stderr.once( 'data', errorHandler );
 
 
 	// pipe child process's stdout / stderr
