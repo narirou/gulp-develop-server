@@ -57,12 +57,12 @@ function app() {
 			});
 		}
 		else {
-			this.push( file );
+			stream.push( file );
 			callback();
 		}
 	};
 
-	stream.end = function( file ) {
+	stream.end = function() {
 		isRestarted = false;
 	};
 
@@ -211,7 +211,10 @@ app.reset = function( signal, callback ) {
 
 	return app.kill( signal, function() {
 		app.options = _.cloneDeep( app.defaultOptions );
-		stopped( callback )();
+
+		if( typeof callback === 'function' ) {
+			callback();
+		}
 	});
 };
 
