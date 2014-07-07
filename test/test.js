@@ -153,8 +153,36 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw an error if call `server.restart` before `server.listen`', function() {
+	it( 'should restart the server by Stream', function( done ) {
+		var opt = {
+			path: 'test/apps/app',
+		};
+		var file = new gutil.File({
+			base: __dirname + '/test/apps/',
+			cwd:  __dirname,
+			path: __dirname + '/test/apps/app.js'
+		});
+		var stream = app();
 
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+			var pid = app.child.pid;
+
+			stream.write( file );
+			stream.once( 'data', function() {
+				should( app.child.connected ).be.true;
+				should( gutil.log.args.length ).eql( 4 );
+				should( gutil.log.lastCall.args[ 0 ] ).match( /server was restarted/ );
+				should( app.child.pid ).not.eql( pid );
+				request( url ).get( '/' ).expect( 200 ).end( done );
+			});
+		});
+	});
+
+
+	it( 'should throw an error if call `server.restart` before `server.listen`', function() {
 		should( function() {
 			app.restart();
 		}).throw();
