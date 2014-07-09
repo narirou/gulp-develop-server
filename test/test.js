@@ -55,7 +55,8 @@ describe( 'gulp-develop-server', function() {
 
 	it( 'should listen the express server', function( done ) {
 		var opt = {
-			path: 'test/apps/app-express'
+			path: 'test/apps/app-express',
+			delay: 1200
 		};
 
 		app.listen( opt, function( error ) {
