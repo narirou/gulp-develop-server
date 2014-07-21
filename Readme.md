@@ -91,7 +91,7 @@ api
 ###server()
 
 Create a `Transform` stream.
-Restart the server at once if get files.
+Restart the server at once when this stream gets files.
 
 
 ###server.kill( [signal, callback] )
@@ -149,7 +149,7 @@ gulp.task( 'server:start', function() {
 });
 
 // restart server and then livereload
-fulp.task( 'sever:restart', function() {
+gulp.task( 'sever:restart', function() {
     gulp.src( 'app.js' )
         .pipe( server() )
         .pipe( livereload() ); 
