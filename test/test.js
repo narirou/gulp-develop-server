@@ -1,3 +1,5 @@
+/*global describe, it, before, afterEach */
+
 'use strict';
 
 var should  = require( 'should' ),
@@ -74,7 +76,7 @@ describe( 'gulp-develop-server', function() {
 			execArgv: [ '--harmony' ]
 		};
 
-		app.listen( opt, function( error ) {
+		app.listen( opt, function() {
 			should( app.options.execArgv ).eql( opt.execArgv );
 			done();
 		});
@@ -87,7 +89,7 @@ describe( 'gulp-develop-server', function() {
 			env: { NODE_ENV: 'production', PORT: 1338 }
 		};
 
-		app.listen( opt, function( error ) {
+		app.listen( opt, function() {
 			should( app.options.env ).eql( opt.env );
 			done();
 		});
@@ -101,7 +103,7 @@ describe( 'gulp-develop-server', function() {
 		};
 		var now = Date.now();
 
-		app.listen( opt, function( error ) {
+		app.listen( opt, function() {
 			var delay = Date.now() - now;
 
 			should( delay ).within( 50, 80 );
@@ -125,7 +127,7 @@ describe( 'gulp-develop-server', function() {
 
 		app.listen( opt, function( error ) {
 			should.exist( error );
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server error/ );
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server failed to start/ );
 			done();
 		});
 	});

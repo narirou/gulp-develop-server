@@ -113,9 +113,12 @@ app.listen = function( options, callback ) {
 
 	// run server process
 	app.child = fork( app.options.path, {
-		silent:   true,
+		cwd:      app.options.cwd,
 		env:      app.options.env,
-		execArgv: app.options.execArgv
+		encoding: app.options.encoding,
+		execPath: app.options.execPath,
+		execArgv: app.options.execArgv,
+		silent:   true,
 	});
 
 
@@ -136,12 +139,11 @@ app.listen = function( options, callback ) {
 
 	app.child.stderr.once( 'data', function( error ) {
 		if( error && timer ) {
-			gutil.log( gutil.colors.red( 'development server error:' ) );
+			gutil.log( gutil.colors.red( 'development server failed to start.' ) );
 			clearTimeout( timer );
 			callback( '' + error );
 		}
 	});
-
 
 	// pipe child process's stdout / stderr
 	app.child.stdout.pipe( process.stdout );
