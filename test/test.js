@@ -120,14 +120,14 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw an error if the server is broken', function( done ) {
+	it( 'should throw error if the server is broken', function( done ) {
 		var opt = {
 			path: 'test/apps/app-broken'
 		};
 
 		app.listen( opt, function( error ) {
 			should.exist( error );
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server failed to start/ );
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server has error/ );
 			done();
 		});
 	});

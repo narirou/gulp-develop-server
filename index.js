@@ -10,7 +10,7 @@ var _          = require( 'lodash' ),
 function started( callback ) {
 	return function() {
 		if( app.child ) {
-			gutil.log( 'development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+			gutil.log( 'Development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
 		}
 		if( typeof callback === 'function' ) {
 			callback();
@@ -22,7 +22,7 @@ function started( callback ) {
 function stopped( callback ) {
 	return function() {
 		if( app.child ) {
-			gutil.log( 'development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+			gutil.log( 'Development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
 			app.child = null;
 		}
 		if( typeof callback === 'function' ) {
@@ -35,7 +35,7 @@ function stopped( callback ) {
 function restarted( callback ) {
 	return function( error ) {
 		if( ! error ) {
-			gutil.log( gutil.colors.cyan( 'development server was restarted.' ) );
+			gutil.log( gutil.colors.cyan( 'Development server was restarted.' ) );
 		}
 		if( typeof callback === 'function' ) {
 			callback( error );
@@ -97,7 +97,7 @@ app.listen = function( options, callback ) {
 
 	// server already started
 	if( app.child && app.child.connected ) {
-		return gutil.log( 'development server already started.' );
+		return gutil.log( 'Development server already started.' );
 	}
 
 	// fallback arguments
@@ -139,7 +139,7 @@ app.listen = function( options, callback ) {
 
 	app.child.stderr.once( 'data', function( error ) {
 		if( error && timer ) {
-			gutil.log( gutil.colors.red( 'development server failed to start.' ) );
+			gutil.log( gutil.colors.red( 'Development server has error.' ) );
 			clearTimeout( timer );
 			callback( '' + error );
 		}
@@ -196,7 +196,7 @@ app.changed = app.restart = function( callback ) {
 	}
 
 	// server not started
-	throw new gutil.PluginError( pluginName, 'development server not started.' );
+	throw new gutil.PluginError( pluginName, 'Development server not started.' );
 };
 
 
