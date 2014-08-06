@@ -34,7 +34,7 @@ gulp.task( 'server:start', function() {
 });
 
 // restart server if app.js changed
-fulp.task( 'sever:restart', function() {
+gulp.task( 'sever:restart', function() {
     gulp.watch( [ 'app.js' ], server.restart )
 });
 ```
@@ -136,7 +136,7 @@ gulp.task( 'server:restart', [ 'server:start' ], function() {
 ```
 
 
-####with Stream:
+####use as a stream:
 
 ```javascript
 var gulp       = require( 'gulp' ),
