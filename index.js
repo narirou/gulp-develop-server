@@ -7,72 +7,66 @@ var _          = require( 'lodash' ),
 	pluginName = 'gulp-develop-server';
 
 
-function started( callback ) {
-	return function() {
-		if( app.child ) {
-			gutil.log( 'Development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
-		}
-		if( typeof callback === 'function' ) {
-			callback();
-		}
-	};
+function started( error, callback ) {
+	if( ! error && app.child ) {
+		gutil.log( 'Development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+	}
+	if( typeof callback === 'function' ) {
+		callback( error );
+	}
 }
 
 
-function stopped( callback ) {
-	return function() {
-		if( app.child ) {
-			gutil.log( 'Development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
-			app.child = null;
-		}
-		if( typeof callback === 'function' ) {
-			callback();
-		}
-	};
+function stopped( error, callback ) {
+	if( ! error && app.child ) {
+		gutil.log( 'Development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		app.child = null;
+	}
+	if( typeof callback === 'function' ) {
+		callback( error );
+	}
 }
 
 
-function restarted( callback ) {
-	return function( error ) {
-		if( ! error ) {
-			gutil.log( gutil.colors.cyan( 'Development server was restarted.' ) );
-		}
-		if( typeof callback === 'function' ) {
-			callback( error );
-		}
-	};
+function restarted( error, callback ) {
+	gutil.log( error || gutil.colors.cyan( 'Development server was restarted.' ) );
+
+	if( typeof callback === 'function' ) {
+		callback( error );
+	}
 }
 
 
 function app() {
 	var stream = new Transform( { objectMode: true } ),
-		isRestarted = false;
+		isStream = false;
 
 	stream._transform = function( file, encoding, callback ) {
-		if( ! isRestarted ) {
-			isRestarted = true;
-			app.changed( function() {
-				stream.push( file );
-				callback();
-			});
-		}
-		else {
+		var pushFile = function() {
 			stream.push( file );
 			callback();
+		};
+
+		if( ! isStream ) {
+			isStream = true;
+			return app.changed( pushFile );
 		}
+
+		pushFile();
 	};
 
-	stream.end = function() {
-		isRestarted = false;
-	};
-
-	stream.changed = app.changed;
+	stream.on( 'finish', function() {
+		isStream = false;
+	});
 
 	return stream;
 }
 
 
 app.child = null;
+
+
+app.isChanged = false;
 
 
 app.defaultOptions = {
@@ -95,21 +89,22 @@ app.listen = function( options, callback ) {
 		throw new gutil.PluginError( pluginName, 'application `path` required.' );
 	}
 
-	// server already started
-	if( app.child && app.child.connected ) {
-		return gutil.log( 'Development server already started.' );
-	}
-
 	// fallback arguments
 	if( typeof options === 'function' ) {
 		callback = options;
 		options = {};
 	}
-	// override default options
-	else if( typeof options === 'object' ) {
-		_.merge( app.options, options );
+
+	// the server already started
+	if( app.child && app.child.connected ) {
+		started( 'Development server already started.', callback );
+		return app;
 	}
 
+	// override default options
+	if( typeof options === 'object' ) {
+		_.merge( app.options, options );
+	}
 
 	// run server process
 	app.child = fork( app.options.path, {
@@ -121,22 +116,23 @@ app.listen = function( options, callback ) {
 		silent:   true,
 	});
 
-
-	// run callback
-	//     if not receive an error after `options.delay` seconds,
-	//     regard the server listening success.
+	// run callback by checking a timer
 	var timer;
 	if( typeof callback === 'function' && app.options.delay > 0 ) {
-		timer = setTimeout( started( callback ), app.options.delay );
+		timer = setTimeout( function() {
+			started( null, callback );
+		}, app.options.delay );
 	}
 
+	// run callback by checking `success message`
 	app.child.once( 'message', function( message ) {
 		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
 			clearTimeout( timer );
-			started( callback )();
+			started( null, callback );
 		}
 	});
 
+	// run callback with error message if the server has error
 	app.child.stderr.once( 'data', function( error ) {
 		if( error && timer ) {
 			gutil.log( gutil.colors.red( 'Development server has error.' ) );
@@ -164,38 +160,52 @@ app.kill = function( signal, callback ) {
 		signal = signal || app.options.killSignal;
 	}
 
-	// sending kill signall
-	if( app.child && app.child.connected ) {
-		app.child.once( 'close', stopped( callback ) );
+	// send kill signal
+	if( app.child ) {
+		app.child.once( 'close', function() {
+			stopped( null, callback );
+		});
 
 		app.child.kill( signal );
 
 		return app;
 	}
 
-	// server already stopped
-	if( typeof callback === 'function' ) {
-		callback();
-	}
-
+	// the server already stopped
+	stopped( 'Development server already stopped.', callback );
 	return app;
 };
 
 
 app.changed = app.restart = function( callback ) {
 
+	// already called this function
+	if( app.isChanged ) {
+		restarted( 'Development server already received restart requests.', callback );
+		return app;
+	}
+
+	// restart the server
+	var end = function( error ) {
+		restarted( error, callback );
+		app.isChanged = false;
+	};
+
+	app.isChanged = true;
+
 	if( app.child && app.child.connected ) {
+
 		return app.kill( function() {
-			app.listen( restarted( callback ) );
+			app.listen( end );
 		});
 	}
 
-	// server not started, but try to start using options.path
+	// if the server not started, try to start using options.path
 	else if( app.options.path ) {
-		return app.listen( restarted( callback ) );
+		return app.listen( end );
 	}
 
-	// server not started
+	// the server not started
 	throw new gutil.PluginError( pluginName, 'Development server not started.' );
 };
 
@@ -211,11 +221,12 @@ app.reset = function( signal, callback ) {
 		signal = signal || app.options.killSignal;
 	}
 
-	return app.kill( signal, function() {
+	// kill the server process and then reset options
+	return app.kill( signal, function( error ) {
 		app.options = _.cloneDeep( app.defaultOptions );
 
 		if( typeof callback === 'function' ) {
-			callback();
+			callback( error );
 		}
 	});
 };

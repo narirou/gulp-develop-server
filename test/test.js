@@ -1,4 +1,4 @@
-/*global describe, it, before, afterEach */
+/* global describe, it, before, afterEach */
 
 'use strict';
 
@@ -8,7 +8,7 @@ var should  = require( 'should' ),
 	request = require( 'supertest' ),
 	app     = require( '../' );
 
-var url  = 'http://localhost:1337',
+var URL  = 'http://localhost:1337',
 	stub = null;
 
 
@@ -20,10 +20,16 @@ describe( 'gulp-develop-server', function() {
 
 
 	afterEach( function( done ) {
-		app.reset( function() {
+		var end = function() {
 			stub.reset();
 			done();
-		});
+		};
+
+		if( app.child && app.child.connected ) {
+			return app.reset( end );
+		}
+
+		end();
 	});
 
 
@@ -36,7 +42,7 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			request( url ).get( '/' ).expect( 200 ).end( done );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
@@ -50,7 +56,7 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			request( url ).get( '/' ).expect( 200 ).end( done );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
@@ -65,7 +71,7 @@ describe( 'gulp-develop-server', function() {
 			should.not.exist( error );
 			should( app.child.connected ).be.true;
 			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-			request( url ).get( '/' ).expect( 200 ).end( done );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
@@ -113,14 +119,14 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw error when options.path is empty', function() {
+	it( 'should throw an error when options.path is empty', function() {
 		should( function() {
 			app.listen( {} );
 		}).throw();
 	});
 
 
-	it( 'should throw error if the server is broken', function( done ) {
+	it( 'should throw an error if the server is broken', function( done ) {
 		var opt = {
 			path: 'test/apps/app-broken'
 		};
@@ -133,15 +139,12 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should resetart the server', function( done ) {
+	it( 'should restart the server', function( done ) {
 		var opt = {
 			path: 'test/apps/app'
 		};
 
-		app.listen( opt, function( error ) {
-			should.not.exist( error );
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+		app.listen( opt, function() {
 			var pid = app.child.pid;
 
 			app.restart( function( error ) {
@@ -150,7 +153,7 @@ describe( 'gulp-develop-server', function() {
 				should( gutil.log.args.length ).eql( 4 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was restarted/ );
 				should( app.child.pid ).not.eql( pid );
-				request( url ).get( '/' ).expect( 200 ).end( done );
+				request( URL ).get( '/' ).expect( 200 ).end( done );
 			});
 		});
 	});
@@ -167,19 +170,38 @@ describe( 'gulp-develop-server', function() {
 		});
 		var stream = app();
 
-		app.listen( opt, function( error ) {
-			should.not.exist( error );
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+		app.listen( opt, function() {
 			var pid = app.child.pid;
 
 			stream.write( file );
+
 			stream.once( 'data', function() {
 				should( app.child.connected ).be.true;
 				should( gutil.log.args.length ).eql( 4 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was restarted/ );
 				should( app.child.pid ).not.eql( pid );
-				request( url ).get( '/' ).expect( 200 ).end( done );
+				request( URL ).get( '/' ).expect( 200 ).end( done );
+			});
+		});
+	});
+
+
+	it( 'should restart the server properly when `server.restart` called twice.', function( done ) {
+		var opt = {
+			path: 'test/apps/app'
+		};
+
+		app.listen( opt, function() {
+			var pid = app.child.pid;
+
+			app.restart( function() {
+				should( app.child.connected ).be.true;
+				should( app.child.pid ).not.eql( pid );
+				done();
+			});
+
+			app.restart( function( error ) {
+				should( error ).match( /already received restart requests/ );
 			});
 		});
 	});
@@ -197,11 +219,7 @@ describe( 'gulp-develop-server', function() {
 			path: 'test/apps/app'
 		};
 
-		app.listen( opt, function( error ) {
-			should.not.exist( error );
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-
+		app.listen( opt, function() {
 			app.kill( function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
@@ -218,11 +236,7 @@ describe( 'gulp-develop-server', function() {
 			path: 'test/apps/app'
 		};
 
-		app.listen( opt, function( error ) {
-			should.not.exist( error );
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
-
+		app.listen( opt, function() {
 			app.kill( 'SIGTERM', function( error ) {
 				should.not.exist( error );
 				should( app.child ).eql( null );
@@ -240,11 +254,8 @@ describe( 'gulp-develop-server', function() {
 			killSignal: 'SIGTERM'
 		};
 
-		app.listen( opt, function( error ) {
+		app.listen( opt, function() {
 			should( app.options.killSignal ).eql( opt.killSignal );
-			should.not.exist( error );
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
 
 			app.kill( function( error ) {
 				should.not.exist( error );
@@ -263,15 +274,12 @@ describe( 'gulp-develop-server', function() {
 			testKey: true
 		};
 
-		app.listen( opt, function( error ) {
-			should.not.exist( error );
-			should( app.options.testKey ).be.true;
-			should( app.child.connected ).be.true;
-			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+		app.listen( opt, function() {
+			should( opt ).have.ownProperty( 'testKey' );
 
 			app.reset( function( error ) {
 				should.not.exist( error );
-				should( app.options ).not.have.key( 'testKey' );
+				should( app.options ).not.have.ownProperty( 'testKey' );
 				should( app.child ).eql( null );
 				should( gutil.log.args.length ).eql( 2 );
 				should( gutil.log.lastCall.args[ 0 ] ).match( /server was stopped/ );
