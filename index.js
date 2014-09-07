@@ -135,9 +135,11 @@ app.listen = function( options, callback ) {
 	// run callback with error message if the server has error
 	app.child.stderr.once( 'data', function( error ) {
 		if( error && timer ) {
-			gutil.log( gutil.colors.red( 'Development server has error.' ) );
+			var msg = 'Development server has error.';
+
 			clearTimeout( timer );
-			callback( '' + error );
+			gutil.log( gutil.colors.red( msg ) );
+			started( msg, callback );
 		}
 	});
 
