@@ -9,7 +9,7 @@ var _          = require( 'lodash' ),
 
 function started( error, callback ) {
 	if( ! error && app.child ) {
-		gutil.log( 'Development server listening. (PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		gutil.log( 'Development server listening. (PID:' + gutil.colors.magenta( app.child.pid ) + ')' );
 	}
 	if( typeof callback === 'function' ) {
 		callback( error );
@@ -19,7 +19,7 @@ function started( error, callback ) {
 
 function stopped( error, callback ) {
 	if( ! error && app.child ) {
-		gutil.log( 'Development server was stopped. (PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		gutil.log( 'Development server was stopped. (PID:' + gutil.colors.magenta( app.child.pid ) + ')' );
 		app.child = null;
 	}
 	if( typeof callback === 'function' ) {
@@ -118,30 +118,36 @@ app.listen = function( options, callback ) {
 	});
 
 	// run callback by checking a timer
-	var timer;
+	var called = false,
+		timer;
 
-	if( typeof callback === 'function' && app.options.delay > 0 ) {
+	if( app.options.delay > 0 ) {
 		timer = setTimeout( function() {
-			timer = null;
+			called = true;
 			started( null, callback );
 		}, app.options.delay );
 	}
 
 	// run callback by checking `success message`
 	app.child.once( 'message', function( message ) {
-		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
-			timer = clearTimeout( timer );
+		if( ! called && typeof message === 'string' && message.match( app.options.successMessage ) ) {
+			if( timer ) {
+				timer = clearTimeout( timer );
+			}
+			called = true;
 			started( null, callback );
 		}
 	});
 
 	// run callback with error message if the server has error
 	app.child.stderr.once( 'data', function( error ) {
-		if( timer && error ) {
+		if( ! called && error ) {
+			if( timer ) {
+				timer = clearTimeout( timer );
+			}
 			var msg = 'Development server has error.';
-
-			timer = clearTimeout( timer );
 			gutil.log( gutil.colors.red( msg ) );
+			called = true;
 			started( msg, callback );
 		}
 	});
