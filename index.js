@@ -119,8 +119,10 @@ app.listen = function( options, callback ) {
 
 	// run callback by checking a timer
 	var timer;
+
 	if( typeof callback === 'function' && app.options.delay > 0 ) {
 		timer = setTimeout( function() {
+			timer = null;
 			started( null, callback );
 		}, app.options.delay );
 	}
@@ -128,17 +130,17 @@ app.listen = function( options, callback ) {
 	// run callback by checking `success message`
 	app.child.once( 'message', function( message ) {
 		if( timer && typeof message === 'string' && message.match( app.options.successMessage ) ) {
-			clearTimeout( timer );
+			timer = clearTimeout( timer );
 			started( null, callback );
 		}
 	});
 
 	// run callback with error message if the server has error
 	app.child.stderr.once( 'data', function( error ) {
-		if( error && timer ) {
+		if( timer && error ) {
 			var msg = 'Development server has error.';
 
-			clearTimeout( timer );
+			timer = clearTimeout( timer );
 			gutil.log( gutil.colors.red( msg ) );
 			started( msg, callback );
 		}
