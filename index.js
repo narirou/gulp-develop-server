@@ -9,7 +9,7 @@ var _          = require( 'lodash' ),
 
 function started( error, callback ) {
 	if( ! error && app.child ) {
-		gutil.log( 'Development server listening. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		gutil.log( 'Development server listening. (PID:', gutil.colors.magenta( app.child.pid ), ')' );
 	}
 	if( typeof callback === 'function' ) {
 		callback( error );
@@ -19,7 +19,7 @@ function started( error, callback ) {
 
 function stopped( error, callback ) {
 	if( ! error && app.child ) {
-		gutil.log( 'Development server was stopped. ( PID:', gutil.colors.magenta( app.child.pid ), ')' );
+		gutil.log( 'Development server was stopped. (PID:', gutil.colors.magenta( app.child.pid ), ')' );
 		app.child = null;
 	}
 	if( typeof callback === 'function' ) {
@@ -29,8 +29,9 @@ function stopped( error, callback ) {
 
 
 function restarted( error, callback ) {
-	gutil.log( error || gutil.colors.cyan( 'Development server was restarted.' ) );
-
+	if( ! error && app.child ) {
+		gutil.log( gutil.colors.cyan( 'Development server was restarted.' ) );
+	}
 	if( typeof callback === 'function' ) {
 		callback( error );
 	}
