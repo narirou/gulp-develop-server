@@ -61,6 +61,21 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
+	it( 'should listen the server by only checking message', function( done ) {
+		var opt = {
+			path: 'test/apps/app',
+			delay: 0
+		};
+
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
+		});
+	});
+
+
 	it( 'should listen the express server', function( done ) {
 		var opt = {
 			path: 'test/apps/app-express',
