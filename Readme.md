@@ -3,9 +3,9 @@ gulp-develop-server
 
 > run your node.js server and automatically restart with gulp.
 
-[![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat)](https://travis-ci.org/narirou/gulp-develop-server)
-[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat)](https://www.npmjs.org/package/gulp-develop-server)
-[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
+[![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat-square)](https://travis-ci.org/narirou/gulp-develop-server)
+[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square)](https://www.npmjs.org/package/gulp-develop-server)
+[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 
 gulp-develop-server is a development assistant for node.js server that runs
@@ -65,7 +65,7 @@ api
     - Run node process with this options.  
 
 - `delay`   
-    - type: {Numeric}  
+    - type: {Number}  
     - default: `600`  
     - If not receive an error from the server after `options.delay` seconds, regard the server listening success.
     - This option needs to adjust according to your application's initialize time.
@@ -160,3 +160,10 @@ gulp.task( 'watch', [ 'server:start' ], function() {
      gulp.watch( [ 'app.js', 'routes/**/*.js' ], [ 'server:restart' ] );
 });
 ```
+
+
+
+thanks
+------
+
+[@pronebird](https://github.com/pronebird)
