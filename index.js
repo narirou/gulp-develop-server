@@ -108,7 +108,7 @@ app.listen = function( options, callback ) {
 	}
 
 	// run server process
-	app.child = fork( app.options.path, {
+	var child = fork( app.options.path, {
 		cwd:      app.options.cwd,
 		env:      app.options.env,
 		encoding: app.options.encoding,
@@ -116,6 +116,8 @@ app.listen = function( options, callback ) {
 		execArgv: app.options.execArgv,
 		silent:   true,
 	});
+
+	app.child = child;
 
 	// run callback by checking a timer
 	var called = false,
@@ -129,7 +131,7 @@ app.listen = function( options, callback ) {
 	}
 
 	// run callback by checking `success message`
-	app.child.once( 'message', function( message ) {
+	child.once( 'message', function( message ) {
 		if( ! called && typeof message === 'string' && message.match( app.options.successMessage ) ) {
 			if( timer ) {
 				timer = clearTimeout( timer );
@@ -140,7 +142,7 @@ app.listen = function( options, callback ) {
 	});
 
 	// run callback with error message if the server has error
-	app.child.stderr.once( 'data', function( error ) {
+	child.stderr.once( 'data', function( error ) {
 		if( ! called && error ) {
 			if( timer ) {
 				timer = clearTimeout( timer );
@@ -153,8 +155,8 @@ app.listen = function( options, callback ) {
 	});
 
 	// pipe child process's stdout / stderr
-	app.child.stdout.pipe( process.stdout );
-	app.child.stderr.pipe( process.stderr );
+	child.stdout.pipe( process.stdout );
+	child.stderr.pipe( process.stderr );
 
 	return app;
 };
