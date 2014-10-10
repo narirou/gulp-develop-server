@@ -35,7 +35,7 @@ gulp.task( 'server:start', function() {
 
 // restart server if app.js changed
 gulp.task( 'server:restart', function() {
-    gulp.watch( [ './app.js' ], server.restart )
+    gulp.watch( [ './app.js' ], server.restart );
 });
 ```
 
