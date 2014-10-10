@@ -30,12 +30,12 @@ var gulp   = require( 'gulp' ),
 
 // run server
 gulp.task( 'server:start', function() {
-    server.listen( { path: 'app.js' } );
+    server.listen( { path: './app.js' } );
 });
 
 // restart server if app.js changed
-gulp.task( 'sever:restart', function() {
-    gulp.watch( [ 'app.js' ], server.restart )
+gulp.task( 'server:restart', function() {
+    gulp.watch( [ './app.js' ], server.restart )
 });
 ```
 
@@ -50,8 +50,8 @@ api
 
 - `path`  
     - type: {String}
-    - exapmle: `'./your_app.js'`
-    - Application path. This option is required.
+    - exapmle: `'./your_node_app.js'`
+    - Your node application path. This option is required.
 
 - `env`  
     - type: {Object}  
@@ -88,7 +88,7 @@ api
 **callback( error )**  
 
 
-###server()
+###server( [options] )
 
 Create a `Transform` stream.
 Restart the server at once when this stream gets files.
@@ -121,17 +121,19 @@ var gulp       = require( 'gulp' ),
     livereload = require( 'gulp-livereload' );
 
 gulp.task( 'server:start', function() {
-    server.listen( { path: 'app.js' }, livereload.listen );
+    server.listen( { path: './apps/app.js' }, livereload.listen );
 });
 
 // If server scripts change, restart the server and then livereload.
 gulp.task( 'server:restart', [ 'server:start' ], function() {
-    function restart() {
+    
+    function restart( file ) {
         server.changed( function( error ) {
-            if( ! error ) livereload.changed();
+            if( ! error ) livereload.changed( file.path );
         });
     }
-    gulp.watch( [ 'app.js', 'routes/**/*.js' ], restart );
+
+    gulp.watch( [ './apps/app.js', './routes/**/*.js' ] ).on( 'change', restart );
 });
 ```
 
@@ -141,23 +143,26 @@ gulp.task( 'server:restart', [ 'server:start' ], function() {
 ```javascript
 var gulp       = require( 'gulp' ),
     server     = require( 'gulp-develop-server' ),
-    livereload = require( 'gulp-livereload' );
+    livereload = require( 'gulp-livereload' ),
+    coffee     = require( 'gulp-coffee' );
 
-// run server
-gulp.task( 'server:start', function() {
-    server.listen( { path: 'app.js', execArgv: [ '--harmony' ] } );
+var options = {
+    path: './apps/app.js',
+    execArgv: [ '--harmony' ]
+};
+
+// If server side's coffee files changed, compile these files,
+// restart the server and then livereload.
+gulp.task( 'server:restart', function() {
+    gulp.src( './src/*.coffee' )
+        .pipe( coffee() )
+        .pipe( gulp.dest( './apps' ) )
+        .pipe( server( options ) )
+        .pipe( livereload() );
 });
 
-// restart server and then livereload
-gulp.task( 'sever:restart', function() {
-    gulp.src( 'app.js' )
-        .pipe( server() )
-        .pipe( livereload() ); 
-});
-
-// watching server scripts 
-gulp.task( 'watch', [ 'server:start' ], function() {
-     gulp.watch( [ 'app.js', 'routes/**/*.js' ], [ 'server:restart' ] );
+gulp.task( 'default', [ 'server:restart' ], function() {
+    gulp.watch( './src/*.coffee', [ 'server:restart' ] );
 });
 ```
 
