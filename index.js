@@ -38,9 +38,14 @@ function restarted( error, callback ) {
 }
 
 
-function app() {
+function app( options ) {
 	var stream = new Transform( { objectMode: true } ),
 		isStream = false;
+
+	// override default options
+	if( ! app.child && typeof options === 'object' ) {
+		_.merge( app.options, options );
+	}
 
 	stream._transform = function( file, encoding, callback ) {
 		var pushFile = function() {
