@@ -1,10 +1,7 @@
+*~
 *.git
 *.log
-*.editorconfig
-*.travis.yml
-*.npmignore
-*.jshintrc
 *.sublime-project
 *.sublime-workspace
-test/
+node_modules/
 samples/
