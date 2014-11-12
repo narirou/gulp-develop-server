@@ -12,6 +12,7 @@ gulp-develop-server is a development assistant for node.js server that runs
 the process and automatically restarts it when a file is modified. 
 
 
+
 installation
 ------------
 
@@ -55,7 +56,7 @@ api
 
 - `env`  
     - type: {Object}  
-    - default: `{ NODE_ENV: 'development' }`  
+    - default: `{ NODE_ENV: 'development' }` (extends current `process.env`)  
     - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
     - Environment settings of your server.  
 
@@ -175,5 +176,5 @@ gulp.task( 'default', [ 'server:restart' ], function() {
 thanks
 ------
 
-[@pronebird](https://github.com/pronebird)
+[@pronebird](https://github.com/pronebird)  
 [@vkareh](https://github.com/vkareh)
