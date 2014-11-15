@@ -2,7 +2,8 @@
 
 'use strict';
 
-var should  = require( 'should' ),
+var _       = require( 'lodash' ),
+	should  = require( 'should' ),
 	sinon   = require( 'sinon' ),
 	gutil   = require( 'gulp-util' ),
 	request = require( 'supertest' ),
@@ -111,7 +112,21 @@ describe( 'gulp-develop-server', function() {
 		};
 
 		app.listen( opt, function() {
-			should( app.options.env ).eql( opt.env );
+			should( app.options.env.NODE_ENV ).eql( opt.env.NODE_ENV );
+			should( app.options.env.PORT ).eql( opt.env.PORT );
+			done();
+		});
+	});
+
+
+	it( 'should include current environmental variables by default', function( done ) {
+		var opt = {
+			path: 'test/apps/app'
+		};
+		var envExtended = _.extend( app.defaultOptions.env, process.env );
+
+		app.listen( opt, function() {
+			should( app.options.env ).eql( envExtended );
 			done();
 		});
 	});
