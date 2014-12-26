@@ -114,7 +114,6 @@ more examples
 -------------
 
 ####with [gulp-livereload](https://github.com/vohof/gulp-livereload):
-(recommend)
 
 ```javascript
 var gulp       = require( 'gulp' ),
@@ -156,17 +155,18 @@ var options = {
     execArgv: [ '--harmony' ]
 };
 
-// If server side's coffee files changed, compile these files,
+// If server side's coffee files change, compile these files,
 // restart the server and then livereload.
 gulp.task( 'server:restart', function() {
     gulp.src( './src/*.coffee' )
         .pipe( coffee() )
         .pipe( gulp.dest( './apps' ) )
-        .pipe( server( options ) )
+        .pipe( server() )
         .pipe( livereload() );
 });
 
-gulp.task( 'default', [ 'server:restart' ], function() {
+gulp.task( 'default', function() {
+    server.listen( options, livereload.listen );
     gulp.watch( './src/*.coffee', [ 'server:restart' ] );
 });
 ```
