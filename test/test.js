@@ -123,7 +123,7 @@ describe( 'gulp-develop-server', function() {
 		var opt = {
 			path: 'test/apps/app'
 		};
-		var envExtended = _.extend( app.defaultOptions.env, process.env );
+		var envExtended = _.extend( { NODE_ENV: 'development' }, process.env );
 
 		app.listen( opt, function() {
 			should( app.options.env ).eql( envExtended );
