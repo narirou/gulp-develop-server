@@ -1,9 +1,10 @@
 *.log
 *.editorconfig
-*.travis.yml
+*.yml
 *.npmignore
 *.jshintrc
 *.sublime-project
 *.sublime-workspace
 test/
 samples/
+coverage/

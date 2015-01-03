@@ -12,7 +12,7 @@
     "url": "https://github.com/narirou/gulp-develop-server.git"
   },
   "scripts": {
-    "test": "mocha --reporter spec --timeout 3000 ./test/test"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter spec --timeout 3000 ./test/test"
   },
   "keywords": [
     "gulpplugin",
@@ -27,10 +27,11 @@
   },
   "devDependencies": {
     "express": "^4.4.5",
-    "mocha": "*",
-    "should": "*",
-    "sinon": "*",
-    "supertest": "*"
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
+    "should": "^4.4.2",
+    "sinon": "^1.12.2",
+    "supertest": "^0.15.0"
   },
   "license": "MIT"
 }

@@ -77,7 +77,7 @@ app.isChanged = false;
 
 app.defaultOptions = {
 	path: '',
-	env: _.extend({ NODE_ENV: 'development' }, process.env),
+	env: _.extend( { NODE_ENV: 'development' }, process.env ),
 	execArgv: [],
 	delay: 600,
 	successMessage: /^server listening$/,

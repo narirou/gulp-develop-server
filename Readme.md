@@ -1,12 +1,21 @@
 gulp-develop-server
-====================
+===================
 
 > run your node.js server and automatically restart with gulp.
 
-[![Build Status](http://img.shields.io/travis/narirou/gulp-develop-server/master.svg?style=flat-square)](https://travis-ci.org/narirou/gulp-develop-server)
-[![Npm Modules](http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square)](https://www.npmjs.org/package/gulp-develop-server)
-[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![Build Status][travis-image]][travis-url]
+[![Test Coverage][coveralls-image]][coveralls-url]
+[![Npm Modules][npm-image]][npm-url]
+[![MIT Licensed][license-image]][license-url]
 
+[travis-image]: https://img.shields.io/travis/narirou/gulp-develop-server.svg?style=flat-square
+[travis-url]: https://travis-ci.org/narirou/gulp-develop-server
+[coveralls-image]: https://img.shields.io/coveralls/narirou/hasher.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/narirou/hasher?branch=master
+[npm-image]: http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/package/gulp-develop-server
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+[license-url]: http://opensource.org/licenses/MIT
 
 gulp-develop-server is a development assistant for node.js server that runs
 the process and automatically restarts it when a file is modified. 
@@ -68,14 +77,16 @@ api
 - `delay`   
     - type: {Number}  
     - default: `600`  
-    - If not receive an error from the server after `options.delay` seconds, regard the server listening success.
+    - If not receive an error from the server after `options.delay` seconds,
+    regard the server listening success.
     - This option needs to adjust according to your application's initialize time.
     - If this option set `0`, it will only check `successMessage`.  
 
 - `successMessage`  
     - type: {RegExp}
     - default: `/^server listening$/`  
-    - If your application send a specific message by `process.send` method, regard the server listening success.
+    - If your application send a specific message by `process.send` method,
+    regard the server listening success.
 
 - `killSignal`  
     - type: {String}
