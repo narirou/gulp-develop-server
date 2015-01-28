@@ -60,7 +60,7 @@ api
 
 - `path`  
     - type: {String}
-    - exapmle: `'./your_node_app.js'`
+    - example: `'./your_node_app.js'`
     - Your node application path. This option is required.
 
 - `env`  
