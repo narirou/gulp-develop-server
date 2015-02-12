@@ -153,32 +153,87 @@ gulp.task( 'default', [ 'server:start' ], function() {
 ```
 
 
+####with [BrowserSync](https://github.com/BrowserSync/browser-sync):
+
+```javascript
+var gulp   = require( 'gulp' ),
+    server = require( 'gulp-develop-server' ),
+    bs     = require( 'browser-sync' );
+
+var options = {
+    server: {
+        path: './apps/app.js',
+        execArgv: [ '--harmony' ]
+    },
+    bs: {
+        proxy: 'http://localhost:3000'
+    }
+};
+
+var serverFiles = [
+    './apps/app.js',
+    './routes/*.js'
+];
+
+gulp.task( 'server:start', function() {
+    server.listen( options.server, function( error ) {
+        if( ! error ) bs( options.bs );
+    });
+});
+
+// If server scripts change, restart the server and then browser-reload.
+gulp.task( 'server:restart', function() {
+    server.restart( function( error ) {
+        if( ! error ) bs.reload();
+    });
+});
+
+gulp.task( 'default', [ 'server:start' ], function() {
+    gulp.watch( serverFiles, [ 'server:restart' ] )
+});
+```
+
+
 ####use as a stream:
 
 ```javascript
-var gulp       = require( 'gulp' ),
-    server     = require( 'gulp-develop-server' ),
-    livereload = require( 'gulp-livereload' ),
-    coffee     = require( 'gulp-coffee' );
+var gulp   = require( 'gulp' ),
+    server = require( 'gulp-develop-server' ),
+    bs     = require( 'browser-sync' ),
+    coffee = require( 'gulp-coffee' );
 
 var options = {
-    path: './apps/app.js',
-    execArgv: [ '--harmony' ]
+    server: {
+        path: './apps/app.js',
+        execArgv: [ '--harmony' ]
+    },
+    bs: {
+        proxy: 'http://localhost:3000'
+    }
 };
 
+var serverCoffee = [
+    './src/*.coffee'
+];
+
+gulp.task( 'server:start', function() {
+    server.listen( options.server, function( error ) {
+        if( ! error ) bs( options.bs );
+    });
+});
+
 // If server side's coffee files change, compile these files,
-// restart the server and then livereload.
+// restart the server and then browser-reload.
 gulp.task( 'server:restart', function() {
-    gulp.src( './src/*.coffee' )
+    gulp.src( serverCoffee )
         .pipe( coffee() )
         .pipe( gulp.dest( './apps' ) )
         .pipe( server() )
-        .pipe( livereload() );
+        .pipe( bs.reload({ stream: true }) );
 });
 
-gulp.task( 'default', function() {
-    server.listen( options, livereload.listen );
-    gulp.watch( './src/*.coffee', [ 'server:restart' ] );
+gulp.task( 'default', [ 'server:start' ], function() {
+    gulp.watch( serverCoffee, [ 'server:restart' ] );
 });
 ```
 

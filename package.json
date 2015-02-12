@@ -22,7 +22,7 @@
     "express"
   ],
   "dependencies": {
-    "gulp-util": "*",
+    "gulp-util": "^3.0.3",
     "lodash": "^3.1.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp       = require( 'gulp' ),
-	server     = require( 'gulp-develop-server' ),
+	server     = require( '../../../gulp-develop-server' ),
 	livereload = require( 'gulp-livereload' );
 
 var options = {

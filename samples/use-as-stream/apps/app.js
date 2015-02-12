@@ -7,9 +7,9 @@
 
   server = http.createServer(function(req, res) {
     res.writeHead(200, {
-      'Content-Type': 'text/plain'
+      'Content-Type': 'text/html'
     });
-    return res.end('Hello World\n');
+    return res.end('<!doctype html><html><head></head><body>Hello World.</body></html>');
   });
 
   server.listen(port, function() {
