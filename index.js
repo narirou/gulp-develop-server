@@ -143,7 +143,7 @@ app.listen = function( options, callback ) {
 		started( error || null, callback );
 		called = true;
 
-		child.stderr.removeListener( 'data', errorLisner );
+		child.stderr.removeListener( 'data', errorListener );
 		child.removeListener( 'message', successMessageListener );
 	};
 
@@ -165,13 +165,13 @@ app.listen = function( options, callback ) {
 
 	// initialized by error message if server has error
 	// if Node debugger enabled by execArgv, debugging message comes at first
-	var errorLisner = function( error ) {
+	var errorListener = function( error ) {
 		if( error instanceof Buffer && error.toString().match( /^[Dd]ebugger listening/ ) ) {
 			return;
 		}
 		initialized( 'Development server has error.' );
 	};
-	child.stderr.on( 'data', errorLisner );
+	child.stderr.on( 'data', errorListener );
 
 
 	// pipe child process's stdout / stderr
