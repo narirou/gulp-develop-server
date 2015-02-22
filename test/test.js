@@ -1,5 +1,3 @@
-/* global describe, it, before, afterEach */
-
 'use strict';
 
 var _       = require( 'lodash' ),
