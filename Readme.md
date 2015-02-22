@@ -84,7 +84,7 @@ api
 
 - `successMessage`  
     - type: {RegExp}
-    - default: `/^server listening$/`  
+    - default: `/^[Ss]erver listening/`  
     - If your application send a specific message by `process.send` method,
     regard the server listening success.
 

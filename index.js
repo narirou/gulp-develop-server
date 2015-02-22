@@ -80,7 +80,7 @@ app.defaultOptions = {
 	env: _.extend( { NODE_ENV: 'development' }, process.env ),
 	execArgv: [],
 	delay: 600,
-	successMessage: /^server listening$/,
+	successMessage: /^[Ss]erver listening/,
 	killSignal: 'SIGTERM'
 };
 
