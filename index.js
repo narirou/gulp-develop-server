@@ -166,12 +166,10 @@ app.listen = function( options, callback ) {
 	// initialized by error message if server has error
 	// if Node debugger enabled by execArgv, debugging message comes at first
 	var errorLisner = function( error ) {
-		if( error instanceof Buffer && error.toString().match( /^Debugger listening/ ) ) {
+		if( error instanceof Buffer && error.toString().match( /^[Dd]ebugger listening/ ) ) {
 			return;
 		}
-		if( error ) {
-			initialized( 'Development server has error.' );
-		}
+		initialized( 'Development server has error.' );
 	};
 	child.stderr.on( 'data', errorLisner );
 
