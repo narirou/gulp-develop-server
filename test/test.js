@@ -92,7 +92,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should set `options.execArgv`', function( done ) {
+	it( 'should set --harmony options', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			execArgv: [ '--harmony' ]
@@ -101,6 +101,21 @@ describe( 'gulp-develop-server', function() {
 		app.listen( opt, function() {
 			should( app.options.execArgv ).eql( opt.execArgv );
 			done();
+		});
+	});
+
+
+	it( 'should set --debug options', function( done ) {
+		var opt = {
+			path: 'test/apps/app-no-message',
+			execArgv: [ '--debug' ]
+		};
+
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
