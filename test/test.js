@@ -1,5 +1,3 @@
-/* global describe, it, before, afterEach */
-
 'use strict';
 
 var _       = require( 'lodash' ),
@@ -26,11 +24,7 @@ describe( 'gulp-develop-server', function() {
 			done();
 		};
 
-		if( app.child && app.child.connected ) {
-			return app.reset( end );
-		}
-
-		end();
+		app.reset( end );
 	});
 
 
@@ -92,7 +86,7 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should set `options.execArgv`', function( done ) {
+	it( 'should set --harmony options', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
 			execArgv: [ '--harmony' ]
@@ -101,6 +95,21 @@ describe( 'gulp-develop-server', function() {
 		app.listen( opt, function() {
 			should( app.options.execArgv ).eql( opt.execArgv );
 			done();
+		});
+	});
+
+
+	it( 'should set --debug options', function( done ) {
+		var opt = {
+			path: 'test/apps/app-no-message',
+			execArgv: [ '--debug' ]
+		};
+
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.child.connected ).be.true;
+			should( gutil.log.lastCall.args[ 0 ] ).match( /server listening/ );
+			request( URL ).get( '/' ).expect( 200 ).end( done );
 		});
 	});
 
@@ -237,7 +246,42 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
-	it( 'should throw an error if call `server.restart` before `server.listen`', function() {
+	it( 'should show an error when `server.listen` called twice', function( done ) {
+		var opt = {
+			path: 'test/apps/app'
+		};
+
+		app.listen( opt, function() {
+			var pid = app.child.pid;
+
+			app.listen( opt, function( error ) {
+				should( app.child.connected ).be.true;
+				should( app.child.pid ).eql( pid );
+				should( error ).match( /already started/ );
+				done();
+			});
+		});
+	});
+
+
+	it( 'should show an error when `server.kill` called twice', function( done ) {
+		var opt = {
+			path: 'test/apps/app'
+		};
+
+		app.listen( opt, function() {
+			app.kill( function() {
+				app.kill( function( error ) {
+					should( app.child ).be.null;
+					should( error ).match( /already stopped/ );
+					done();
+				});
+			});
+		});
+	});
+
+
+	it( 'should throw an error when called `server.restart` before `server.listen`', function() {
 		should( function() {
 			app.restart();
 		}).throw();

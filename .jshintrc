@@ -24,5 +24,6 @@
 	"quotmark": "single",
 	"trailing": true,
 	"smarttabs": true,
-	"node": true
+	"node": true,
+	"mocha": true
 }

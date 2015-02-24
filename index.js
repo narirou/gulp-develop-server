@@ -80,7 +80,7 @@ app.defaultOptions = {
 	env: _.extend( { NODE_ENV: 'development' }, process.env ),
 	execArgv: [],
 	delay: 600,
-	successMessage: /^server listening$/,
+	successMessage: /^[Ss]erver listening/,
 	killSignal: 'SIGTERM'
 };
 
@@ -101,7 +101,7 @@ app.listen = function( options, callback ) {
 		options = {};
 	}
 
-	// the server already started
+	// server already started
 	if( app.child && app.child.connected ) {
 		started( 'Development server already started.', callback );
 		return app;
@@ -124,40 +124,55 @@ app.listen = function( options, callback ) {
 
 	app.child = child;
 
-	// run callback by checking a timer
+
+	// run callback when server initialized
 	var called = false,
 		timer;
 
+	var initialized = function( error ) {
+		if( called ) {
+			return;
+		}
+		if( timer ) {
+			timer = clearTimeout( timer );
+		}
+		if( error ) {
+			gutil.log( gutil.colors.red( error ) );
+		}
+
+		started( error || null, callback );
+		called = true;
+
+		child.stderr.removeListener( 'data', errorListener );
+		child.removeListener( 'message', successMessageListener );
+	};
+
+
+	// initialized by checking a timer
 	if( app.options.delay > 0 ) {
-		timer = setTimeout( function() {
-			called = true;
-			started( null, callback );
-		}, app.options.delay );
+		timer = setTimeout( initialized, app.options.delay );
 	}
 
-	// run callback by checking `success message`
-	child.once( 'message', function( message ) {
-		if( ! called && typeof message === 'string' && message.match( app.options.successMessage ) ) {
-			if( timer ) {
-				timer = clearTimeout( timer );
-			}
-			called = true;
-			started( null, callback );
-		}
-	});
 
-	// run callback with error message if the server has error
-	child.stderr.once( 'data', function( error ) {
-		if( ! called && error ) {
-			if( timer ) {
-				timer = clearTimeout( timer );
-			}
-			var msg = 'Development server has error.';
-			gutil.log( gutil.colors.red( msg ) );
-			called = true;
-			started( msg, callback );
+	// initialized by checking `success message`
+	var successMessageListener = function( message ) {
+		if( typeof message === 'string' && message.match( app.options.successMessage ) ) {
+			initialized();
 		}
-	});
+	};
+	child.once( 'message', successMessageListener );
+
+
+	// initialized by error message if server has error
+	// if Node debugger enabled by execArgv, debugging message comes at first
+	var errorListener = function( error ) {
+		if( error instanceof Buffer && error.toString().match( /^[Dd]ebugger listening/ ) ) {
+			return;
+		}
+		initialized( 'Development server has error.' );
+	};
+	child.stderr.on( 'data', errorListener );
+
 
 	// pipe child process's stdout / stderr
 	child.stdout.pipe( process.stdout );
@@ -189,7 +204,7 @@ app.kill = function( signal, callback ) {
 		return app;
 	}
 
-	// the server already stopped
+	// server already stopped
 	stopped( 'Development server already stopped.', callback );
 	return app;
 };
@@ -203,7 +218,7 @@ app.changed = app.restart = function( callback ) {
 		return app;
 	}
 
-	// restart the server
+	// restart server
 	var end = function( error ) {
 		restarted( error, callback );
 		app.isChanged = false;
@@ -218,12 +233,12 @@ app.changed = app.restart = function( callback ) {
 		});
 	}
 
-	// if the server not started, try to start using options.path
+	// if server not started, try to start using options.path
 	else if( app.options.path ) {
 		return app.listen( end );
 	}
 
-	// the server not started
+	// server not started
 	throw new gutil.PluginError( pluginName, 'Development server not started.' );
 };
 
@@ -239,7 +254,7 @@ app.reset = function( signal, callback ) {
 		signal = signal || app.options.killSignal;
 	}
 
-	// kill the server process and then reset options
+	// kill server process and then reset options
 	return app.kill( signal, function( error ) {
 		app.options = _.cloneDeep( app.defaultOptions );
 
