@@ -135,6 +135,11 @@ var options = {
     path: './apps/app.js'
 };
 
+var serverFiles = [
+    './apps/app.js',
+    './routes/*.js'
+];
+
 gulp.task( 'server:start', function() {
     server.listen( options, livereload.listen );
 });
@@ -148,7 +153,7 @@ gulp.task( 'default', [ 'server:start' ], function() {
         });
     }
 
-    gulp.watch( [ './apps/app.js', './routes/*.js' ] ).on( 'change', restart );
+    gulp.watch( serverFile ).on( 'change', restart );
 });
 ```
 
