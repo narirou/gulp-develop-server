@@ -8,7 +8,7 @@ var options = {
 	path: './apps/app.js'
 };
 
-var serverFile = [
+var serverFiles = [
 	'./apps/app.js',
 	'./routes/*.js'
 ];
@@ -26,5 +26,5 @@ gulp.task( 'default', [ 'server:start' ], function() {
 		});
 	}
 
-	gulp.watch( serverFile ).on( 'change', restart );
+	gulp.watch( serverFiles ).on( 'change', restart );
 });

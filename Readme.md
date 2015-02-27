@@ -153,7 +153,7 @@ gulp.task( 'default', [ 'server:start' ], function() {
         });
     }
 
-    gulp.watch( serverFile ).on( 'change', restart );
+    gulp.watch( serverFiles ).on( 'change', restart );
 });
 ```
 
