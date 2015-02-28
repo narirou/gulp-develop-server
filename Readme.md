@@ -11,7 +11,7 @@ gulp-develop-server
 [travis-image]: https://img.shields.io/travis/narirou/gulp-develop-server.svg?style=flat-square
 [travis-url]: https://travis-ci.org/narirou/gulp-develop-server
 [coveralls-image]: https://img.shields.io/coveralls/narirou/gulp-develop-server.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/narirou/gulp-develop-server?branch=master
+[coveralls-url]: https://coveralls.io/r/narirou/gulp-develop-server
 [npm-image]: http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square
 [npm-url]: https://www.npmjs.org/package/gulp-develop-server
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
@@ -87,6 +87,10 @@ api
     - default: `/^[Ss]erver listening/`  
     - If your application send a specific message by `process.send` method,
     regard the server listening success.
+
+- `errorMessage`  
+    - type: {RegExp}
+    - default: `/^[Ee]rror:/` 
 
 - `killSignal`  
     - type: {String}
