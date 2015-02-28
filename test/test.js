@@ -19,12 +19,11 @@ describe( 'gulp-develop-server', function() {
 
 
 	afterEach( function( done ) {
-		var end = function() {
+		app.reset( function() {
+
 			stub.reset();
 			done();
-		};
-
-		app.reset( end );
+		});
 	});
 
 
