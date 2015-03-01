@@ -112,8 +112,6 @@ app.listen = function( options, callback ) {
 		silent:   true
 	});
 
-	app.child = child;
-
 	// run callback when server initialized
 	var called = false,
 		timer;
@@ -132,7 +130,8 @@ app.listen = function( options, callback ) {
 			done( error, callback );
 		}
 		else {
-			var pid = gutil.colors.magenta( app.child.pid );
+			var pid = gutil.colors.magenta( child.pid );
+			app.child = child;
 			done( null, 'Development server listening. (PID:' + pid + ')', callback );
 		}
 
@@ -157,7 +156,6 @@ app.listen = function( options, callback ) {
 	// initialized by `errorMessage` if server printed error
 	var errorListener = function( error ) {
 		if( error instanceof Buffer && error.toString().match( app.options.errorMessage ) ) {
-			app.child = null;
 			initialized( 'Development server has error.' );
 		}
 	};
