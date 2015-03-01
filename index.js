@@ -119,8 +119,6 @@ app.listen = function( options, callback ) {
 		timer;
 
 	var initialized = function( error ) {
-		var message;
-
 		if( called ) {
 			return;
 		}
@@ -131,14 +129,14 @@ app.listen = function( options, callback ) {
 
 		if( error ) {
 			gutil.log( gutil.colors.red( error ) );
+			done( error, callback );
 		}
-		else if( child ) {
-			message = 'Development server listening. (PID:' + gutil.colors.magenta( child.pid ) + ')';
+		else {
+			var pid = gutil.colors.magenta( app.child.pid );
+			done( null, 'Development server listening. (PID:' + pid + ')', callback );
 		}
 
-		done( error, message, callback );
 		called = true;
-
 		child.stderr.removeListener( 'data', errorListener );
 		child.removeListener( 'message', successMessageListener );
 	};
@@ -159,6 +157,7 @@ app.listen = function( options, callback ) {
 	// initialized by `errorMessage` if server printed error
 	var errorListener = function( error ) {
 		if( error instanceof Buffer && error.toString().match( app.options.errorMessage ) ) {
+			app.child = null;
 			initialized( 'Development server has error.' );
 		}
 	};
@@ -187,9 +186,7 @@ app.kill = function( signal, callback ) {
 	if( app.child ) {
 		var stopped = function() {
 			var pid = gutil.colors.magenta( app.child.pid );
-
 			app.child = null;
-
 			done( null, 'Development server was stopped. (PID:' + pid + ')', callback );
 		};
 
@@ -208,7 +205,8 @@ app.changed = app.restart = function( callback ) {
 
 	// already called this function
 	if( isChanged ) {
-		return done( 'Development server already received restart requests.', callback );
+		isChanged = false;
+		return done( null, 'Development server already received restart requests.', callback );
 	}
 
 	// restart server
