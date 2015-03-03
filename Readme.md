@@ -77,20 +77,22 @@ api
 - `delay`   
     - type: {Number}  
     - default: `600`  
-    - If not receive an error from the server after `options.delay` seconds,
-    regard the server listening success.
+    - If this plugin is not receive an error from the server after `options.delay` seconds,
+    assumes the server listening success.
     - This option needs to adjust according to your application's initialize time.
     - If this option set `0`, it will only check `successMessage`.  
 
 - `successMessage`  
     - type: {RegExp}
     - default: `/^[Ss]erver listening/`  
-    - If your application send a specific message by `process.send` method,
-    regard the server listening success.
+    - If your application send the specific message by `process.send` method,
+    this plugin assumes the server listening success.
 
 - `errorMessage`  
     - type: {RegExp}
     - default: `/^[Ee]rror:/` 
+    - If this plugin receives the specific error message that matched this RegExp at start-up, 
+    assumes the server has error.
 
 - `killSignal`  
     - type: {String}
