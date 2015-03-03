@@ -11,7 +11,7 @@ gulp-develop-server
 [travis-image]: https://img.shields.io/travis/narirou/gulp-develop-server.svg?style=flat-square
 [travis-url]: https://travis-ci.org/narirou/gulp-develop-server
 [coveralls-image]: https://img.shields.io/coveralls/narirou/gulp-develop-server.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/narirou/gulp-develop-server?branch=master
+[coveralls-url]: https://coveralls.io/r/narirou/gulp-develop-server
 [npm-image]: http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square
 [npm-url]: https://www.npmjs.org/package/gulp-develop-server
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
@@ -77,16 +77,22 @@ api
 - `delay`   
     - type: {Number}  
     - default: `600`  
-    - If not receive an error from the server after `options.delay` seconds,
-    regard the server listening success.
+    - If this plugin is not receive an error from the server after `options.delay` seconds,
+    assumes the server listening success.
     - This option needs to adjust according to your application's initialize time.
     - If this option set `0`, it will only check `successMessage`.  
 
 - `successMessage`  
     - type: {RegExp}
     - default: `/^[Ss]erver listening/`  
-    - If your application send a specific message by `process.send` method,
-    regard the server listening success.
+    - If your application send the specific message by `process.send` method,
+    this plugin assumes the server listening success.
+
+- `errorMessage`  
+    - type: {RegExp}
+    - default: `/^[Ee]rror:/` 
+    - If this plugin receives the specific error message that matched this RegExp at start-up, 
+    assumes the server has error.
 
 - `killSignal`  
     - type: {String}
