@@ -106,9 +106,10 @@ app.listen = function( options, callback ) {
 	var child = fork( app.options.path, {
 		cwd:      app.options.cwd,
 		env:      app.options.env,
-		encoding: app.options.encoding,
 		execPath: app.options.execPath,
 		execArgv: app.options.execArgv,
+		gid:      app.options.gid,
+		uid:      app.options.uid,
 		silent:   true
 	});
 
