@@ -90,7 +90,7 @@ api
 
 - `errorMessage`  
     - type: {RegExp}
-    - default: `/^[Ee]rror:/` 
+    - default: `/[Ee]rror:/` 
     - If this plugin receives the specific error message that matched this RegExp at start-up, 
     assumes the server has error.
 
