@@ -13,6 +13,7 @@ var isChanged = false;
 var defaultOptions = {
 	path: '',
 	env: _.extend( { NODE_ENV: 'development' }, process.env ),
+	args: [],
 	execArgv: [],
 	delay: 600,
 	successMessage: /^[Ss]erver listening/,
@@ -103,7 +104,7 @@ app.listen = function( options, callback ) {
 	}
 
 	// run server process
-	var child = fork( app.options.path, {
+	var child = fork( app.options.path, app.options.args, {
 		cwd:      app.options.cwd,
 		env:      app.options.env,
 		execPath: app.options.execPath,
