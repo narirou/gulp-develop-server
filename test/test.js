@@ -113,6 +113,20 @@ describe( 'gulp-develop-server', function() {
 	});
 
 
+	it( 'should set `options.args`', function( done ) {
+		var opt = {
+			path: 'test/apps/app-args-check',
+			args: [ 'param-1', 'param-2' ]
+		};
+
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
+			should( app.options.args ).eql( opt.args );
+			done();
+		});
+	});
+
+
 	it( 'should set `options.env`', function( done ) {
 		var opt = {
 			path: 'test/apps/app',
