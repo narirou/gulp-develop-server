@@ -119,7 +119,8 @@ describe( 'gulp-develop-server', function() {
 			args: [ 'param-1', 'param-2' ]
 		};
 
-		app.listen( opt, function() {
+		app.listen( opt, function( error ) {
+			should.not.exist( error );
 			should( app.options.args ).eql( opt.args );
 			done();
 		});

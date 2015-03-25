@@ -69,6 +69,10 @@ api
     - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
     - Environment settings of your server.  
 
+- `args`
+    - type: {Array}
+    - your application's arguments
+
 - `execArgv`  
     - type: {Array}  
     - example: `[ '--harmony' ]`  
