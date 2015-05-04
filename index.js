@@ -184,8 +184,9 @@ app.kill = function( signal, callback ) {
 
 	// send kill signal
 	if( app.child ) {
+		var pid = gutil.colors.magenta( app.child.pid );
+
 		var stopped = function() {
-			var pid = gutil.colors.magenta( app.child.pid );
 			app.child = null;
 			done( null, 'Development server was stopped. (PID:' + pid + ')', callback );
 		};
