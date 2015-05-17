@@ -255,6 +255,10 @@ describe( 'gulp-develop-server', function() {
 			app.restart( function( error ) {
 				should( error ).match( /already received restart requests/ );
 			});
+
+			app.restart( function( error ) {
+				should( error ).match( /already received restart requests/ );
+			});
 		});
 	});
 
