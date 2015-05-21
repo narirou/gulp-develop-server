@@ -1,8 +1,11 @@
 # Project Files
 
-# Tools
+# Sublime
 *.sublime-workspace
 *.sublime-project
+
+# VS Code
+.settings
 
 # Node
 node_modules
