@@ -15,7 +15,7 @@ gulp-develop-server
 [npm-image]: http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square
 [npm-url]: https://www.npmjs.org/package/gulp-develop-server
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[license-url]: http://opensource.org/licenses/MIT
+[license-url]: ./LICENSE
 
 gulp-develop-server is a development assistant for node.js server that runs
 the process and automatically restarts it when a file is modified. 
@@ -81,7 +81,7 @@ api
 - `delay`   
     - type: {Number}  
     - default: `600`  
-    - If this plugin is not receive an error from the server after `options.delay` seconds,
+    - If this plugin does not receive an error from the server after `options.delay` seconds,
     assumes the server listening success.
     - This option needs to adjust according to your application's initialize time.
     - If this option set `0`, it will only check `successMessage`.  
