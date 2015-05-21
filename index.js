@@ -184,8 +184,9 @@ app.kill = function( signal, callback ) {
 
 	// send kill signal
 	if( app.child ) {
+		var pid = gutil.colors.magenta( app.child.pid );
+
 		var stopped = function() {
-			var pid = gutil.colors.magenta( app.child.pid );
 			app.child = null;
 			done( null, 'Development server was stopped. (PID:' + pid + ')', callback );
 		};
@@ -205,7 +206,6 @@ app.changed = app.restart = function( callback ) {
 
 	// already called this function
 	if( isChanged ) {
-		isChanged = false;
 		return done( null, 'Development server already received restart requests.', callback );
 	}
 
@@ -215,9 +215,8 @@ app.changed = app.restart = function( callback ) {
 		return done( error, gutil.colors.cyan( 'Development server was restarted.' ), callback );
 	};
 
-	isChanged = true;
-
 	if( app.child ) {
+		isChanged = true;
 		return app.kill( function() {
 			app.listen( restarted );
 		});
@@ -225,6 +224,7 @@ app.changed = app.restart = function( callback ) {
 
 	// if server not started, try to start using options.path
 	else if( app.options.path ) {
+		isChanged = true;
 		return app.listen( restarted );
 	}
 
