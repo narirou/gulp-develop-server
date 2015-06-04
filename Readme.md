@@ -4,6 +4,7 @@ gulp-develop-server
 > run your node.js server and automatically restart with gulp.
 
 [![Build Status][travis-image]][travis-url]
+[![Dependency Status][deps-image]][deps-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 [![Npm Modules][npm-image]][npm-url]
 [![MIT Licensed][license-image]][license-url]
