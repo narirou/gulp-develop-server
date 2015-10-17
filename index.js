@@ -114,7 +114,7 @@ app.listen = function( options, callback ) {
 		silent:   true
 	});
 	
-  	child.on('exit', function(data) {
+  	child.on('exit', function() {
     	app.child = null;
   	})
 
