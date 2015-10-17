@@ -113,6 +113,10 @@ app.listen = function( options, callback ) {
 		uid:      app.options.uid,
 		silent:   true
 	});
+	
+  	child.on('exit', function(data) {
+    	app.child = null;
+  	})
 
 	// run callback when server initialized
 	var called = false,
