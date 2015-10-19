@@ -113,10 +113,6 @@ app.listen = function( options, callback ) {
 		uid:      app.options.uid,
 		silent:   true
 	});
-	
-  	child.on('exit', function() {
-    	app.child = null;
-  	})
 
 	// run callback when server initialized
 	var called = false,
@@ -207,6 +203,10 @@ app.kill = function( signal, callback ) {
 
 
 app.changed = app.restart = function( callback ) {
+	
+	if (!child.connected) {
+		app.child = null;
+	}
 
 	// already called this function
 	if( isChanged ) {
