@@ -204,7 +204,7 @@ app.kill = function( signal, callback ) {
 
 app.changed = app.restart = function( callback ) {
 	
-	if (!child.connected) {
+	if (app.child && !app.child.connected) {
 		app.child = null;
 	}
 
