@@ -53,7 +53,7 @@ function processExitListener() {
 }
 
 
-function handlingProcessExeption() {
+function handlingProcessException() {
 	// unbind previous process-events
 	process.removeListener( 'uncaughtException', processUncaughtExceptionListener );
 	process.removeListener( 'exit', processExitListener );
@@ -193,8 +193,8 @@ app.listen = function( options, callback ) {
 	child.stdout.pipe( process.stdout );
 	child.stderr.pipe( process.stderr );
 
-	// bind process exit event
-	handlingProcessExeption();
+	// bind process event
+	handlingProcessException();
 
 	return app;
 };
