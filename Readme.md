@@ -4,6 +4,7 @@ gulp-develop-server
 > run your node.js server and automatically restart with gulp.
 
 [![Build Status][travis-image]][travis-url]
+[![Dependency Status][deps-image]][deps-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 [![Npm Modules][npm-image]][npm-url]
 [![MIT Licensed][license-image]][license-url]
@@ -14,6 +15,8 @@ gulp-develop-server
 [coveralls-url]: https://coveralls.io/r/narirou/gulp-develop-server
 [npm-image]: http://img.shields.io/npm/v/gulp-develop-server.svg?style=flat-square
 [npm-url]: https://www.npmjs.org/package/gulp-develop-server
+[deps-image]: https://img.shields.io/david/shinnn/gulp-gh-pages.svg?label=deps&style=flat-square
+[deps-url]: https://david-dm.org/narirou/gulp-develop-server
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: ./LICENSE
 
