@@ -74,6 +74,7 @@ api
 
 - `args`
     - type: {Array}
+    - default: `[ '--color' ]`  
     - your application's arguments
 
 - `execArgv`  

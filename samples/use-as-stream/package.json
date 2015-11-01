@@ -9,7 +9,8 @@
   "devDependencies": {
     "browser-sync": "^2.0.1",
     "gulp": "^3.8.8",
-    "gulp-coffee": "^2.2.0"
+    "gulp-coffee": "^2.2.0",
+    "gulp-util": "^3.0.7"
   },
   "license": "Public"
 }
