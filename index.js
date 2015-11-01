@@ -7,9 +7,6 @@ var _          = require( 'lodash' ),
 	pluginName = 'gulp-develop-server';
 
 
-var isChanged = false;
-
-
 var defaultOptions = {
 	path: '',
 	env: _.extend( { NODE_ENV: 'development' }, process.env ),
@@ -22,7 +19,54 @@ var defaultOptions = {
 };
 
 
-var app = module.exports = function( options ) {
+function done( error, message, callback ) {
+	// fallback arguments
+	if( typeof message === 'function' ) {
+		callback = message;
+	}
+
+	// print message
+	else if( ! error && typeof message === 'string' ) {
+		gutil.log( message );
+	}
+
+	// run callback
+	if( typeof callback === 'function' ) {
+		callback( error || null );
+	}
+
+	return app;
+}
+
+
+function processUncaughtExceptionListener( event ) {
+	app.kill( function() {
+		gutil.log( gutil.colors.red( 'Development server has error.' ) );
+		console.log( event.name, event.message );
+		console.log( event.toString() );
+	});
+}
+
+
+function processExitListener() {
+	app.kill();
+}
+
+
+function handlingProcessExeption() {
+	// unbind previous process-events
+	process.removeListener( 'uncaughtException', processUncaughtExceptionListener );
+	process.removeListener( 'exit', processExitListener );
+
+	// when other gulp-plugin throw exeption, kill server process
+	process.on( 'uncaughtException', processUncaughtExceptionListener );
+
+	// when gulp exit, kill server process
+	process.once( 'exit', processExitListener );
+}
+
+
+function serverStream( options ) {
 	var stream = new Transform( { objectMode: true } ),
 		isStream = false;
 
@@ -50,32 +94,14 @@ var app = module.exports = function( options ) {
 	});
 
 	return stream;
-};
+}
 
 
-var done = function( error, message, callback ) {
-
-	// fallback arguments
-	if( typeof message === 'function' ) {
-		callback = message;
-	}
-
-	// print message
-	else if( ! error && typeof message === 'string' ) {
-		gutil.log( message );
-	}
-
-	// run callback
-	if( typeof callback === 'function' ) {
-		callback( error || null );
-	}
-
-	return app;
-};
-
+var app = module.exports = serverStream;
 
 app.child = null;
 
+app.isChanged = false;
 
 app.options = _.cloneDeep( defaultOptions );
 
@@ -114,15 +140,9 @@ app.listen = function( options, callback ) {
 		silent:   true
 	});
 
-	// run callback when server initialized
-	var called = false,
-		timer;
+	var timer;
 
-	var initialized = function( error ) {
-		if( called ) {
-			return;
-		}
-
+	var initialized = _.once( function( error ) {
 		if( timer ) {
 			timer = clearTimeout( timer );
 		}
@@ -137,10 +157,10 @@ app.listen = function( options, callback ) {
 			done( null, 'Development server listening. (PID:' + pid + ')', callback );
 		}
 
-		called = true;
+		// called = true;
 		child.stderr.removeListener( 'data', errorListener );
 		child.removeListener( 'message', successMessageListener );
-	};
+	});
 
 	// initialized by timer using `delay`
 	if( app.options.delay > 0 ) {
@@ -163,12 +183,22 @@ app.listen = function( options, callback ) {
 	};
 	child.stderr.on( 'data', errorListener );
 
+	// handling exit of child process
+	child.once( 'exit', function() {
+		app.child = null;
+		// isChanged = false;
+	});
+
 	// pipe child_process's stdout / stderr
 	child.stdout.pipe( process.stdout );
 	child.stderr.pipe( process.stderr );
 
+	// bind process exit event
+	handlingProcessExeption();
+
 	return app;
 };
+
 
 
 app.kill = function( signal, callback ) {
@@ -187,7 +217,6 @@ app.kill = function( signal, callback ) {
 		var pid = gutil.colors.magenta( app.child.pid );
 
 		var stopped = function() {
-			app.child = null;
 			done( null, 'Development server was stopped. (PID:' + pid + ')', callback );
 		};
 
@@ -203,24 +232,25 @@ app.kill = function( signal, callback ) {
 
 
 app.changed = app.restart = function( callback ) {
-	
-	if (app.child && !app.child.connected) {
+
+	// ensure restart when child process cannot connect
+	if( app.child && !app.child.connected ) {
 		app.child = null;
 	}
 
 	// already called this function
-	if( isChanged ) {
+	if( app.isChanged ) {
 		return done( null, 'Development server already received restart requests.', callback );
 	}
 
 	// restart server
 	var restarted = function( error ) {
-		isChanged = false;
+		app.isChanged = false;
 		return done( error, gutil.colors.cyan( 'Development server was restarted.' ), callback );
 	};
 
 	if( app.child ) {
-		isChanged = true;
+		app.isChanged = true;
 		return app.kill( function() {
 			app.listen( restarted );
 		});
@@ -228,7 +258,7 @@ app.changed = app.restart = function( callback ) {
 
 	// if server not started, try to start using options.path
 	else if( app.options.path ) {
-		isChanged = true;
+		app.isChanged = true;
 		return app.listen( restarted );
 	}
 
