@@ -10,7 +10,7 @@ var _          = require( 'lodash' ),
 var defaultOptions = {
 	path: '',
 	env: _.extend( { NODE_ENV: 'development' }, process.env ),
-	args: ['--color'],
+	args: [],
 	execArgv: [],
 	delay: 600,
 	successMessage: /^[Ss]erver listening/,

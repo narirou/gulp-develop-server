@@ -73,8 +73,7 @@ api
     - Environment settings of your server.  
 
 - `args`
-    - type: {Array}
-    - default: `[ '--color' ]`  
+    - type: {Array}  
     - your application's arguments
 
 - `execArgv`  
