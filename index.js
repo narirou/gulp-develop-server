@@ -53,8 +53,9 @@ function processExitListener() {
 }
 
 
-function handlingProcessException() {
-	// unbind previous process-events
+function handlingProcessEvent() {
+
+	// unbind previous process events
 	process.removeListener( 'uncaughtException', processUncaughtExceptionListener );
 	process.removeListener( 'exit', processExitListener );
 
@@ -157,7 +158,6 @@ app.listen = function( options, callback ) {
 			done( null, 'Development server listening. (PID:' + pid + ')', callback );
 		}
 
-		// called = true;
 		child.stderr.removeListener( 'data', errorListener );
 		child.removeListener( 'message', successMessageListener );
 	});
@@ -186,7 +186,6 @@ app.listen = function( options, callback ) {
 	// handling exit of child process
 	child.once( 'exit', function() {
 		app.child = null;
-		// isChanged = false;
 	});
 
 	// pipe child_process's stdout / stderr
@@ -194,7 +193,7 @@ app.listen = function( options, callback ) {
 	child.stderr.pipe( process.stderr );
 
 	// bind process event
-	handlingProcessException();
+	handlingProcessEvent();
 
 	return app;
 };
