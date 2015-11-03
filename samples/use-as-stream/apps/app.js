@@ -1,7 +1,9 @@
 (function() {
-  var http, port, server;
+  var gutil, http, port, server;
 
   http = require('http');
+
+  gutil = require('gulp-util');
 
   port = 3000;
 
@@ -13,7 +15,10 @@
   });
 
   server.listen(port, function() {
-    return process.send('server listening');
+    var message;
+    process.send('server listening');
+    message = gutil.colors.blue('server listening');
+    return console.log(message);
   });
 
 }).call(this);

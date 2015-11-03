@@ -1,13 +1,15 @@
 'use strict';
 
-var gulp   = require( 'gulp' ),
-	server = require( '../../../gulp-develop-server' ),
-	bs     = require( 'browser-sync' ),
-	coffee = require( 'gulp-coffee' );
+var gulp    = require( 'gulp' ),
+	server  = require( '../../../gulp-develop-server' ),
+	plumber = require( 'gulp-plumber' ),
+	bs      = require( 'browser-sync' ),
+	coffee  = require( 'gulp-coffee' );
 
 var options = {
 	server: {
 		path: './apps/app.js',
+		args: [ '--color' ],
 		execArgv: [ '--harmony' ]
 	},
 	bs: {
@@ -29,6 +31,7 @@ gulp.task( 'server:start', function() {
 // restart the server and then browser-reload.
 gulp.task( 'server:restart', function() {
 	gulp.src( serverCoffeeFiles )
+		.pipe( plumber() )
 		.pipe( coffee() )
 		.pipe( gulp.dest( './apps' ) )
 		.pipe( server() )

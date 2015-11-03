@@ -73,7 +73,7 @@ api
     - Environment settings of your server.  
 
 - `args`
-    - type: {Array}
+    - type: {Array}  
     - your application's arguments
 
 - `execArgv`  
@@ -262,3 +262,5 @@ thanks
 
 [@pronebird](https://github.com/pronebird)  
 [@vkareh](https://github.com/vkareh)
+[@chimerast](https://github.com/chimerast)
+[@silverbp](https://github.com/silverbp)
