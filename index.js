@@ -111,7 +111,7 @@ app.listen = function( options, callback ) {
 
 	// throw error when options is not set
 	if( ! app.options.path && typeof options.path !== 'string' ) {
-		throw new gutil.pluginError( pluginName, 'application `path` required.' );
+		throw new gutil.PluginError( pluginName, 'application `path` required.' );
 	}
 
 	// fallback arguments
