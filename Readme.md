@@ -261,6 +261,7 @@ thanks
 ------
 
 [@pronebird](https://github.com/pronebird)  
-[@vkareh](https://github.com/vkareh)
-[@chimerast](https://github.com/chimerast)
-[@silverbp](https://github.com/silverbp)
+[@vkareh](https://github.com/vkareh)  
+[@chimerast](https://github.com/chimerast)  
+[@silverbp](https://github.com/silverbp)  
+[@tomxtobin](https://github.com/tomxtobin)  
