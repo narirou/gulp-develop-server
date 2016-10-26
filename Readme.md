@@ -72,6 +72,12 @@ api
     - example: `{ PORT: 3000, NODE_ENV: 'production' }`  
     - Environment settings of your server.  
 
+- `cwd`  
+    - type: {String}  
+    - default: `.`
+    - example: `path/to/my/project/`  
+    - Current working directory of the child process  
+
 - `args`
     - type: {Array}  
     - your application's arguments
